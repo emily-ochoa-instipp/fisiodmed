@@ -7,9 +7,7 @@ from django.db.models import Q
 from apps.pacientes.models import Paciente
 from apps.medicos.models import Medico
 from apps.especialidades.models import Especialidad
-
 # Create your views here.
-
 @login_required
 def tabla_usuarios(request):
     usuarios = Usuario.objects.all()
@@ -99,6 +97,6 @@ def eliminar_usuario(request, usuario_id):
     return redirect('tabla_usuarios')
 
 @login_required
-def profile(request, usuario_id):
+def profile(request):
     return render(request, 'usuarios/profile.html')
 
