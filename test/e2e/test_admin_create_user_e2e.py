@@ -9,23 +9,17 @@ pytestmark = pytest.mark.django_db(transaction=True)
 
 @pytest.mark.django_db
 def test_admin_crea_usuario_por_ui(live_server, page):
-    """
-    E2E real con navegador (Playwright):
-    - Crea admin en DB
-    - Abre /login, inicia sesión por la UI (inputs reales)
-    - Navega a "add-user", llena y envía el formulario
-    - Verifica que el usuario quedó creado
-    """
-    # 0) Datos de admin y del nuevo usuario
-    admin_pass = "Admin$1234"
-    admin = User.objects.create_superuser(
-        username="admin_test",
+    # Crear admin
+    from django.contrib.auth.models import User
+    admin_username = "admin"
+    admin_password = "admin123"
+
+    User.objects.create_superuser(
+        username=admin_username,
         email="admin@example.com",
-        password=admin_pass,
-        first_name="Admin",
-        last_name="Test",
-        is_active=True,
+        password=admin_password
     )
+
     nuevo = {
         "txtUsername": "nuevo_user",
         "txtEmail": "nuevo@example.com",
@@ -42,10 +36,9 @@ def test_admin_crea_usuario_por_ui(live_server, page):
     login_url = live_server.url + reverse("login")
     page.goto(login_url)
 
-    # Tu vista espera "inputUsername" y "inputPassword"
-    page.fill('input[name="inputUsername"]', admin.username)
-    page.fill('input[name="inputPassword"]', admin_pass)
-    page.click('input[type="submit"]')
+    page.fill("input[name='txtUserName']", admin_username)
+    page.fill("input[name='txtPassword']", admin_password)
+    page.click("input[type='submit']")
 
     # Puedes esperar alguna señal post-login (titulo, texto, URL, etc.)
     # Si redirige a home:
