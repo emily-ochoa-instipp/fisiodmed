@@ -2,15 +2,15 @@
 from django.urls import reverse
 from django.contrib.auth.models import User
 import pytest
-pytestmark = pytest.mark.e2e
 
+pytestmark = pytest.mark.e2e
 pytestmark = pytest.mark.django_db(transaction=True)
 
 
 @pytest.mark.django_db
 def test_admin_crea_usuario_por_ui(live_server, page):
-    # Crear admin
-    from django.contrib.auth.models import User
+
+    # Crear superusuario admin
     admin_username = "admin"
     admin_password = "admin123"
 
@@ -20,50 +20,46 @@ def test_admin_crea_usuario_por_ui(live_server, page):
         password=admin_password
     )
 
+    # Datos del nuevo usuario (adaptados a TU formulario real)
     nuevo = {
         "txtUsername": "nuevo_user",
         "txtEmail": "nuevo@example.com",
         "txtNombres": "NUEVO",
         "txtApellidos": "USUARIO",
-        "txtPassword": "IgnoradoPorLaVista",
-        "txtCedula": "0955555555",
+        "txtPassword": "password123",
+        "txtNumDoc": "0955555555",
         "txtTelefono": "0999999999",
-        "txtDireccion": "Calle Falsa 123",
-        "txtFechaCumpleanos": "1990-01-01",
     }
 
-    # 1) Login por la UI
+    # 1) LOGIN UI
     login_url = live_server.url + reverse("login")
     page.goto(login_url)
 
-    page.fill("input[name='txtUserName']", admin_username)
-    page.fill("input[name='txtPassword']", admin_password)
-    page.click("input[type='submit']")
+    page.fill("input[name='username']", admin_username)
+    page.fill("input[name='password']", admin_password)
 
-    # Puedes esperar alguna señal post-login (titulo, texto, URL, etc.)
-    # Si redirige a home:
-    # page.wait_for_url("**/home")
+    page.click("button[type='submit']")   # ← tu login tiene button, no input
 
-    # 2) Ir a la página "add-user" y llenar form
-    add_user_url = live_server.url + reverse("add-user")
+    # 2) IR A LA PÁGINA Y ABRIR EL MODAL
+    add_user_url = live_server.url + reverse("tabla-usuarios")
     page.goto(add_user_url)
 
-    page.fill('input[name="txtUsername"]', nuevo["txtUsername"])
-    page.fill('input[name="txtEmail"]', nuevo["txtEmail"])
+    # Abrir modal Agregar usuario
+    page.click('button[data-target="#eventModal"]')
+    page.wait_for_selector('#eventModal', state="visible")
+
+    # 3) LLENAR CAMPOS REALES
+    page.select_option('select[name="txtRol"]', "Paciente")
     page.fill('input[name="txtNombres"]', nuevo["txtNombres"])
     page.fill('input[name="txtApellidos"]', nuevo["txtApellidos"])
-    page.fill('input[name="txtCedula"]', nuevo["txtCedula"])
+    page.fill('input[name="txtEmail"]', nuevo["txtEmail"])
     page.fill('input[name="txtTelefono"]', nuevo["txtTelefono"])
-    page.fill('input[name="txtDireccion"]', nuevo["txtDireccion"])
-    page.fill('input[name="txtFechaCumpleanos"]', nuevo["txtFechaCumpleanos"])
+    page.fill('input[name="txtNumDoc"]', nuevo["txtNumDoc"])
+    page.fill('input[name="txtUsername"]', nuevo["txtUsername"])
+    page.fill('input[name="txtPassword"]', nuevo["txtPassword"])
 
-    # Envía el formulario (ajusta el selector del botón según tu template)
-    page.click('input[type="submit"]')
+    # 4) GUARDAR
+    page.click("button[type='submit']")
 
-    # 3) Verificación de resultado:
-    #    a) Por UI: busca un texto de éxito o que aparezca en una tabla/lista
-    #       Si tienes una lista de usuarios en la misma página o tras redirección:
-    # page.wait_for_selector(f"text={nuevo['txtUsername']}")
-
-    #    b) Por backend (DB): confirma que el usuario fue creado
+    # 5) VALIDACIÓN DB
     assert User.objects.filter(username=nuevo["txtUsername"]).exists()
