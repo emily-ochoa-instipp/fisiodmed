@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -18,58 +19,47 @@ def tabla_usuarios(request):
     })
 
 def registrar_usuario(request):
-    if request.method == 'POST':
+    if request.method == "POST":
+        rol = request.POST.get("txtRol")
+        nombres = request.POST.get("txtNombres")
+        apellidos = request.POST.get("txtApellidos")
+        email = request.POST.get("txtEmail")
+        telefono = request.POST.get("txtTelefono")
+        num_doc = request.POST.get("txtNumDoc")
+        username = request.POST.get("txtUsername")
+        password = request.POST.get("txtPassword")
+        estado = request.POST.get("txtEstado") == "on"
 
-        first_name_ = request.POST['txtNombres']
-        last_name_= request.POST['txtApellidos']
-        email_ = request.POST['txtEmail']
-        num_doc_ = request.POST['txtNumDoc']
-        username_ = request.POST['txtUsername']
-        password_ = request.POST['txtPassword']
-        rol_ = request.POST['txtRol']
-        telefono_ = request.POST['txtTelefono']
-
-        users = User.objects.filter(
-            Q(username__iexact=username_) |
-            Q(email__iexact=email_)
-        )
-
-        usuarios = Usuario.objects.filter(
-            Q(num_doc__iexact=num_doc_)
-        )
-
-        if users.exists() or usuarios.exists():
-            return render(request, 'usuarios/tabla_usuarios.html', {
-                'error': 'Ya existe un usuario con ese nombre de usuario, email o cédula'
+        # VALIDAR SI YA EXISTE EL USERNAME
+        if User.objects.filter(username=username).exists():
+            return render(request, "tabla_usuarios.html", {
+                "error": "El nombre de usuario ya existe",
+                "usuarios": Usuario.objects.all()
             })
-        else:
-            userCreate = User.objects.create_user(
-                first_name=first_name_, last_name=last_name_, email=email_, username=username_, password=password_)
 
-            usuarioCreate = Usuario.objects.create(
-                user=userCreate, telefono=telefono_, num_doc=num_doc_, rol=rol_)
-            
-            if rol_ == 'Paciente':
-                Paciente.objects.create(
-                    usuario=usuarioCreate,
-                    fecha_nac=None,
-                    edad=None,
-                    sexo=None,
-                    tipo_sangre=None,
-                    #num_doc=num_doc_,  
-                    direccion=None,
-                    estado_civil=None
-                )
-            if rol_ == 'Medico':
-                Medico.objects.create(
-                    usuario=usuarioCreate,
-                    direccion=None,
-                    especialidad=None,
-                )
+        # CREAR USUARIO DJANGO
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            first_name=nombres,
+            last_name=apellidos
+        )
 
-        return redirect('tabla_usuarios')
-    
-    return render(request, 'usuarios/tabla_usuarios.html')
+        # CREAR PERFIL
+        Usuario.objects.create(
+            user=user,
+            rol=rol,
+            telefono=telefono,
+            num_doc=num_doc,
+            estado=estado
+        )
+
+        messages.success(request, "Usuario registrado correctamente")
+        return redirect("tabla_usuarios")
+
+    # si entran por GET
+    return redirect("tabla_usuarios")
 
 @login_required
 def editar_usuario(request, usuario_id):

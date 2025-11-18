@@ -1,0 +1,92 @@
+{% load static %}
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Registrar Usuario</title>
+
+  <link rel="stylesheet" href="{% static 'css/app-light.css' %}">
+  <link rel="stylesheet" href="{% static 'css/fisiomed_login.css' %}">
+</head>
+
+<body class="light">
+  <div class="wrapper">
+    <div class="logo">
+      <img src="{% static 'assets/images/fisiomed_logo.png' %}" alt="Fisiomed Logo">
+    </div>
+
+    <div class="login-container">
+      <h1 class="h5 mb-1">REGISTRO DE USUARIO</h1>
+      <p class="mb-3">Complete los campos para registrarse</p>
+
+      <form action="{% url 'registrar_usuario' %}" method="POST">
+
+        {% csrf_token %}
+
+        {% if error %}
+          <div class="alert alert-danger">
+            {{ error }}
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <h2 class="h6">Nombres</h2>
+          <input type="text" name="first_name" class="form-control form-control-lg"
+                 placeholder="Ingrese nombres" required>
+        </div>
+
+        <div class="form-group">
+          <h2 class="h6">Apellidos</h2>
+          <input type="text" name="last_name" class="form-control form-control-lg"
+                 placeholder="Ingrese apellidos" required>
+        </div>
+
+        <div class="form-group">
+          <h2 class="h6">Usuario</h2>
+          <input type="text" name="username" class="form-control form-control-lg"
+                 placeholder="Ingrese un nombre de usuario" required>
+        </div>
+
+        <div class="form-group">
+          <h2 class="h6">Contraseña</h2>
+          <input type="password" name="password" class="form-control form-control-lg"
+                 placeholder="Ingrese contraseña" required>
+        </div>
+
+        <div class="form-group">
+          <h2 class="h6">Rol</h2>
+          <select name="rol" class="form-control form-control-lg" required>
+            <option value="">Seleccione un rol</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Secretaria">Secretaria</option>
+            <option value="Doctor">Doctor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <h2 class="h6">Teléfono</h2>
+          <input type="text" name="telefono" class="form-control form-control-lg"
+                 placeholder="Ingrese teléfono" required>
+        </div>
+
+        <div class="form-group">
+          <h2 class="h6">Número de Documento</h2>
+          <input type="text" name="num_doc" class="form-control form-control-lg"
+                 placeholder="Ingrese número de documento" required>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
+          Crear Cuenta
+        </button>
+
+        <div class="mt-3 text-center">
+          <a href="{% url 'login' %}">← Volver al Login</a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</body>
+</html>
