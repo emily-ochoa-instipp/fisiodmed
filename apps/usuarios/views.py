@@ -98,5 +98,11 @@ def eliminar_usuario(request, usuario_id):
 
 @login_required
 def profile(request):
+    # 1. Recuperar el objeto Usuario relacionado con el usuario logueado
+    usuario_obj = request.user.usuario # Asume una relación inversa 'usuario' en el modelo User
+    # 2. Crear el contexto
+    contexto = {
+        'usuario': usuario_obj # Clave 'usuario' que necesita la plantilla
+    }
     return render(request, 'usuarios/profile.html')
 
