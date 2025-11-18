@@ -1,7 +1,9 @@
 name: CI (PR) - Unit, Integrations, Performace and Stress
+
 on:
   pull_request:
     branches: [developer]
+    
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -28,6 +30,6 @@ jobs:
       
       - name: Run unit, integration, performance and stress tests
         env:
-          DJANGO_SETTINGS_MODULE: centromedico.settings
+          DJANGO_SETTINGS_MODULE: fisiodmed_project.settings
         run: |
           pytest -k "not e2e" -q
