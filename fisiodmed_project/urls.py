@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.urls import include, path
 from apps.autenticacion import views as autenticacion_views
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', autenticacion_views.login_view, name='login'),

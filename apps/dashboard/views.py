@@ -6,17 +6,17 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def dashboard_analytics(request):
-    return render(request, 'dashboard/dashboard-analytics.html')
+    return render(request, 'dashboard/dashboard_analytics.html')
 
 @login_required
 def dashboard_sales(request):
-    return render(request, 'dashboard/dashboard-sales.html')
+    return render(request, 'dashboard/dashboard_sales.html')
 
 @login_required
 def dashboard_saas(request):
-    return render(request, 'dashboard/dashboard-saas.html')
+    return render(request, 'dashboard/dashboard_saas.html')
 
 @login_required
 def dashboard_system(request):
-    return render(request, 'dashboard/dashboard-system.html')
+    return render(request, 'dashboard/dashboard_system.html')
 

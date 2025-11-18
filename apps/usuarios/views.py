@@ -99,6 +99,6 @@ def eliminar_usuario(request, usuario_id):
     return redirect('tabla_usuarios')
 
 @login_required
-def profile(request, usuario_id):
+def profile(request):
     return render(request, 'usuarios/profile.html')
 
