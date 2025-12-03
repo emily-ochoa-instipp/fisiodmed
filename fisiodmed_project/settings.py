@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'apps.autenticacion',
     'apps.especialidades',
     'apps.medicos',
+    'api_rest',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +151,11 @@ LOGOUT_REDIRECT_URL = 'index'
  #   'apps.autenticacion.backends.MultiFieldAuthBackend',
   #  'django.contrib.auth.backends.ModelBackend',
 #]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
