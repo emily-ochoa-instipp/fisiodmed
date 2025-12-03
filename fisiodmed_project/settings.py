@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'apps.autenticacion',
     'apps.especialidades',
     'apps.medicos',
+    'rest_framework',
+    'api_rest'
 ]
 
 MIDDLEWARE = [
