@@ -119,4 +119,4 @@ def eliminar_paciente(request, paciente_id):
 
 @login_required
 def form_pacientes(request):
-    return render(request, 'pacientes/form_paciente.html')
+    return render(request, 'pacientes/form_pacientes.html')

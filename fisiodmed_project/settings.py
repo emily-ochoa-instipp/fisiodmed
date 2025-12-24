@@ -89,12 +89,27 @@ WSGI_APPLICATION = 'fisiodmed_project.wsgi.application'
     #}
 #}
 
+# Detectar si estamos en GitHub Actions
+if os.getenv("GITHUB_ACTIONS") == "true":
+    TEST_DB_PATH = "/home/runner/work/test_db.sqlite3"
+else:
+    TEST_DB_PATH = BASE_DIR / "db.sqlite3"
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': TEST_DB_PATH,
     }
 }
+
 
 
 
