@@ -29,13 +29,13 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="{% static 'css/app-light.css' %}" id="lightTheme">
     <!-- FullCalendar CSS -->
-    <link rel="stylesheet" href="css/fullcalendar.css">
-    <link rel="stylesheet" href="css/select2.css">
-    <link rel="stylesheet" href="css/dropzone.css">
-    <link rel="stylesheet" href="css/uppy.min.css">
-    <link rel="stylesheet" href="css/jquery.steps.css">
-    <link rel="stylesheet" href="css/jquery.timepicker.css">
-    <link rel="stylesheet" href="css/quill.snow.css">
+    <link rel="stylesheet" href="{% static 'css/fullcalendar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
+    <link rel="stylesheet" href="{% static 'css/uppy.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.steps.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/quill.snow.css' %}">
   </head>
   <body class="vertical  light  ">
     <div class="wrapper">
@@ -183,147 +183,42 @@
         {% block contenido %}
         {% endblock %}
 
-<!-- shortcuts y notificaciones -->
-        <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="list-group list-group-flush my-n3">
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-box fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Package has uploaded successfull</strong></small>
-                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-download fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Widgets are updated successfull</strong></small>
-                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-inbox fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Notifications have been sent</strong></small>
-                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                      </div>
-                    </div> <!-- / .row -->
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-link fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Link was attached to menu</strong></small>
-                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                      </div>
-                    </div>
-                  </div> <!-- / .row -->
-                </div> <!-- / .list-group -->
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body px-5">
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-success justify-content-center">
-                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Control area</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Activity</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Droplet</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Upload</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Users</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Settings</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-<!-- hortcuts y notificaciones -->
+
     </div> <!-- .wrapper -->
 
+
+    <!-- Base para MUCHOS plugins (DataTables, Select2) -->
     <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <!-- tooltips, dropdowns de Bootstrap -->
     <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/moment.min.js' %}"></script>
+
+    <!-- Modales, dropdowns, alertas -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- Scroll personalizado -->
     <script src="{% static 'js/simplebar.min.js' %}"></script>
+
+    <!-- FECHAS / HORAS -->
+    <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+    <script>moment.locale('es');</script>
     <script src="{% static 'js/daterangepicker.js'%}"></script>
+    <script src="{% static 'js/jquery.timepicker.js' %}"></script>
+
+    <!-- Stick on Scroll -->
     <script src="{% static 'js/jquery.stickOnScroll.js' %}"></script>
+
+    <!-- Manipulación de colores (temas) -->
     <script src="{% static 'js/tinycolor-min.js' %}"></script>
+
+    <!-- Configuración global del template -->
     <script src="{% static 'js/config.js' %}"></script>
-    <script src="{% static 'js/d3.min.js' %}"></script>
-    <script src="{% static 'js/topojson.min.js' %}"></script>
-    <script src="{% static 'js/datamaps.all.min.js' %}"></script>
-    <script src="{% static 'js/datamaps-zoomto.js' %}"></script>
-    <script src="{% static 'js/datamaps.custom.js' %}"></script>
+
+    <!-- Tablas con búsqueda, paginación -->
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Gráficos de barras, líneas -->
     <script src="{% static 'js/Chart.min.js' %}"></script>
     <script>
       /* defind global options */
@@ -332,16 +227,58 @@
     </script>
     <script src="{% static 'js/gauge.min.js' %}"></script>
     <script src="{% static 'js/jquery.sparkline.min.js' %}"></script>
-    <script src="{$ static 'js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'js/apexcharts.min.js' %}"></script>
     <script src="{% static 'js/apexcharts.custom.js' %}"></script>
+
+    <!-- Máscaras (teléfono, fechas) -->
     <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+
+    <!-- Selects avanzados -->
     <script src="{% static 'js/select2.min.js' %}"></script>
+
+    <!-- Formularios por pasos y validaciones -->
     <script src="{% static 'js/jquery.steps.min.js' %}"></script>
     <script src="{% static 'js/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'js/jquery.timepicker.js' %}"></script>
+    
+    <!-- Subida de archivos -->
     <script src="{% static 'js/dropzone.min.js' %}"></script>
     <script src="{% static 'js/uppy.min.js' %}"></script>
-    <script src="{% static 'js/quill.min.js' %}"></script>
+
+    <script>
+      $('#dataTable-1').DataTable(
+      {
+        autoWidth: true,
+        "lengthMenu": [
+          [8, 16, 32, 64, -1],
+          [8, 16, 32, 64, "Todos"]
+        ],
+        language: {
+          processing:     "Procesando...",
+          search:         "Buscar:",
+          lengthMenu:     "Mostrar _MENU_ registros",
+          info:           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          infoEmpty:      "Mostrando 0 a 0 de 0 registros",
+          infoFiltered:   "(filtrado de _MAX_ registros totales)",
+          loadingRecords: "Cargando...",
+          zeroRecords:    "No se encontraron resultados",
+          emptyTable:     "No hay datos disponibles en la tabla",
+          paginate: {
+            first:    "Primero",
+            previous: "Anterior",
+            next:     "Siguiente",
+            last:     "Último"
+          }
+        }
+
+      });
+    </script>
+
+    <script>
+      $('#btn-refresh').on('click', function () {
+        location.reload();
+      });
+    </script>
+
     <script>
       $('.select2').select2(
       {
@@ -381,28 +318,48 @@
           }
         });
       }
+      // FILTRO DASHBOARD
       var start = moment().subtract(29, 'days');
       var end = moment();
 
       function cb(start, end)
       {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('#reportrange span').html(start.format('D [de] MMMM [de] YYYY') + ' - ' + end.format('D [de] MMMM [de] YYYY'));
       }
       $('#reportrange').daterangepicker(
       {
         startDate: start,
         endDate: end,
+        locale: {
+          format: 'DD/MM/YYYY',
+          separator: ' - ',
+          applyLabel: 'Aplicar',
+          cancelLabel: 'Cancelar',
+          fromLabel: 'Desde',
+          toLabel: 'Hasta',
+          customRangeLabel: 'Personalizado',
+          weekLabel: 'S',
+          daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+          monthNames: [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+          ],
+          firstDay: 1
+        },
         ranges:
         {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          'Hoy': [moment(), moment()],
+          'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Úlitmos 7 días': [moment().subtract(6, 'days'), moment()],
+          'Úlitmos 30 días': [moment().subtract(29, 'days'), moment()],
+          'Este mes': [moment().startOf('month'), moment().endOf('month')],
+          'Úlitmo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
       }, cb);
       cb(start, end);
+      // FILTRO DASHBOARD
+      
+
       $('.input-placeholder').mask("00/00/0000",
       {
         placeholder: "__/__/____"
@@ -429,75 +386,7 @@
         },
         placeholder: "___.___.___.___"
       });
-      // editor
-      var editor = document.getElementById('editor');
-      if (editor)
-      {
-        var toolbarOptions = [
-          [
-          {
-            'font': []
-          }],
-          [
-          {
-            'header': [1, 2, 3, 4, 5, 6, false]
-          }],
-          ['bold', 'italic', 'underline', 'strike'],
-          ['blockquote', 'code-block'],
-          [
-          {
-            'header': 1
-          },
-          {
-            'header': 2
-          }],
-          [
-          {
-            'list': 'ordered'
-          },
-          {
-            'list': 'bullet'
-          }],
-          [
-          {
-            'script': 'sub'
-          },
-          {
-            'script': 'super'
-          }],
-          [
-          {
-            'indent': '-1'
-          },
-          {
-            'indent': '+1'
-          }], // outdent/indent
-          [
-          {
-            'direction': 'rtl'
-          }], // text direction
-          [
-          {
-            'color': []
-          },
-          {
-            'background': []
-          }], // dropdown with defaults from theme
-          [
-          {
-            'align': []
-          }],
-          ['clean'] // remove formatting button
-        ];
-        var quill = new Quill(editor,
-        {
-          modules:
-          {
-            toolbar: toolbarOptions
-          },
-          theme: 'snow'
-        });
-      }
+
       // Example starter JavaScript for disabling form submissions if there are invalid fields
       (function()
       {
@@ -547,7 +436,6 @@
     </script>
     <script src="{% static 'js/apps.js' %}"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="{% static 'js/js.js' %}"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
