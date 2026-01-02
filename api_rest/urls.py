@@ -10,6 +10,8 @@ router.register(r'especialidad', views.especialidadViewSet)
 router.register(r'citas', views.citaViewSet)
 router.register(r'pacientes', views.pacientesViewSet)
 
+router.register(r'groups', views.GroupViewSet)
+router.register(r'profiles', views.ProfileViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

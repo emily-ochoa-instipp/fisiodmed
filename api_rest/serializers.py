@@ -3,11 +3,15 @@ from rest_framework import serializers
 from apps.especialidades.models import Especialidad
 from apps.citas.models import Cita
 from apps.pacientes.models import Paciente 
+from autenticacion.models import Profile
+from rest_framework import serializers
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ["url", "username", "first_name", "last_name", "groups", "date_joined"]
+
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -28,3 +32,7 @@ class pacientesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Paciente
         fields = ["url", "usuario", "fecha_nac", "edad", "sexo", "tipo_sangre", "direccion", "estado_civil"]
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["url", "cedula", "telefono", "direccion"]
