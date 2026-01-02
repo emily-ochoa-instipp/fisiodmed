@@ -1,20 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.pacientes.models import Paciente
 from datetime import date
 from apps.usuarios.models import Usuario
 from django.contrib.auth.models import User
+from apps.usuarios.decorators import roles_permitidos
 
 # Create your views here.
 
 @login_required
+@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador']))
 def tabla_pacientes(request):
     pacientes = Paciente.objects.all()
     return render(request, 'pacientes/tabla_pacientes.html', {
         'pacientes': pacientes
     })
-
+@login_required
+@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador']))
 def registrar_paciente(request):
     if request.method == 'POST':
         nombres = request.POST['txtNombres']
@@ -58,6 +60,7 @@ def registrar_paciente(request):
     return render(request, 'pacientes/tabla_pacientes.html')
 
 @login_required
+@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador']))
 def editar_paciente(request, paciente_id):
     paciente = Paciente.objects.get(id=paciente_id)
 
@@ -106,6 +109,7 @@ def editar_paciente(request, paciente_id):
     return render(request, 'pacientes/editar_paciente.html', {'paciente': paciente})
 
 @login_required
+@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador']))
 def eliminar_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     usuario = paciente.usuario  
@@ -117,6 +121,3 @@ def eliminar_paciente(request, paciente_id):
     
     return redirect('tabla_pacientes')
 
-@login_required
-def form_pacientes(request):
-    return render(request, 'pacientes/form_paciente.html')

@@ -1,22 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.especialidades.models import Especialidad
 from apps.citas.models import Cita
 from apps.medicos.models import Medico
 from apps.servicios.models import Servicio
 from apps.pacientes.models import Paciente
 from datetime import datetime
+from apps.usuarios.decorators import roles_permitidos
 
 # Create your views here.
 
 @login_required
+@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador', 'Recepcionista']))
 def calendar(request):
     return render(request, 'citas/calendar.html')
 
 # Create your views here.
 
 @login_required
+@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador', 'Recepcionista']))
 def tabla_citas(request):
     citas = Cita.objects.all()
     pacientes = Paciente.objects.all()
@@ -32,6 +34,8 @@ def tabla_citas(request):
         'servicios': servicios
     })
 
+@login_required
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def registrar_cita(request):
     if request.method == 'POST':
         fecha_str = request.POST.get('txtFecha')  
@@ -70,6 +74,7 @@ def registrar_cita(request):
     return render(request, 'citas/tabla_citas.html')
 
 @login_required
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def editar_cita(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id)
     pacientes = Paciente.objects.all()
@@ -120,6 +125,8 @@ def editar_cita(request, cita_id):
 
 
 @login_required
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
+
 def eliminar_cita(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id)
     cita.delete()

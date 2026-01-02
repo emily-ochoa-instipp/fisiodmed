@@ -16,7 +16,9 @@
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
+                {% if request.user|has_group:"Recepcionista,Administrador" %}
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
+                {% endif %}
                 </div>
                 <!-- Small table -->
                 <div class="col-md-12">
@@ -48,13 +50,14 @@
                             <td>High Wycombe</td>
                             <td>Jun 8, 2019</td>
                             <td>
-                              <a href="{% url 'editar_pago' %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
-                              
-                              <!-- Button trigger modal -->
-                              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-                                <span class="fe fe-trash fe-14 "></span>
-                              </button>
-
+                              {% if request.user|has_group:"Recepcionista,Administrador" %}
+                                <a href="{% url 'editar_pago' %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
+                                
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                                  <span class="fe fe-trash fe-14 "></span>
+                                </button>
+                              {% endif %}
                               <!-- Modal -->
                               <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">

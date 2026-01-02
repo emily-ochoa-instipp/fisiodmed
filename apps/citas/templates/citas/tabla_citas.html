@@ -15,7 +15,9 @@
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
+                {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
+                {% endif %}
                 </div>
                 <!-- Small table -->
                 <div class="col-md-12">
@@ -51,11 +53,13 @@
                             <td>{{ cita.duracion }}</td>
 
                             <td>
-                              <a href="{% url 'editar_cita' cita.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
-                             
-                              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ cita.id }}">
-                                <span class="fe fe-trash fe-14 "></span>
-                              </button>
+                              {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}                           
+                                <a href="{% url 'editar_cita' cita.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
+                              
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ cita.id }}">
+                                  <span class="fe fe-trash fe-14 "></span>
+                                </button>
+                              {% endif %}
 
                               <!-- Modal -->
                                 <div class="modal fade" id="exampleModal{{ cita.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ cita.id }}" aria-hidden="true">

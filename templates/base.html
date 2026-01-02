@@ -1,4 +1,5 @@
 {% load static %}
+{% load roles %}
 
 
 <!doctype html>
@@ -77,50 +78,60 @@
               <img class="logo" src="{% static 'assets/images/logo1.png' %}" alt="Logo" class="navbar-brand-img brand-sm">
             </a>
           </div>
-
+<!--MENU-->
           <p class="text-white nav-heading mt-4 mb-4">
             <span>Menu de opciones</span>
           </p>
-  
-<!--MENU-->
+
           <ul class="navbar-nav flex-fill w-100 mb-2">
 <!--dashboard-->
+          {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'inicio' %}">
                 <i class="fe fe-home fe-16"></i>
                 <span class="ml-3 item-text">Dashboard</span>
               </a>
             </li>
+          {% endif %}
 <!--Pacientes-->
+          {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_pacientes' %}">
                 <i class="fe fe-users fe-16"></i>
                 <span class="ml-3 item-text">Pacientes</span>
               </a>
             </li>
+          {% endif %}
 <!--medicos-->
+          {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_medicos' %}">
                 <i class="fe fe-users fe-16"></i>
                 <span class="ml-3 item-text">Médicos</span>
               </a>
             </li>
+          {% endif %}
 <!--especialidades-->
+          {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_especialidades' %}">
                 <i class="fe fe-folder-plus fe-16"></i>
                 <span class="ml-3 item-text">Especialidades</span>
               </a>
             </li>
+          {% endif %}
 <!--Servicios-->
+          {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_servicios' %}">
                 <i class="fe fe-activity fe-16"></i>
                 <span class="ml-3 item-text">Servicios</span>
               </a>
             </li>
+          {% endif %}
 
 <!--Agenda-->
+          {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
             <li class="nav-item dropdown">
               <a href="#agendaMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                 <i class="fe fe-calendar fe-16"></i>
@@ -141,27 +152,34 @@
               </li>
               </ul>
             </li>
+          {% endif %}
 <!--Pagos-->
+          {% if request.user|has_group:"Recepcionista,Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_pagos' %}">
                 <i class="fe fe-credit-card fe-16"></i>
                 <span class="ml-3 item-text">Pagos</span>
               </a>
             </li>
+          {% endif %}
 <!--Reportes-->
+          {% if request.user|has_group:"Recepcionista,Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_reportes' %}">
                 <i class="fe fe-trending-up fe-16"></i>
                 <span class="ml-3 item-text">Reportes</span>
               </a>
             </li>
+          {% endif %}
 <!--Usuarios-->
+          {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_usuarios' %}">
                 <i class="fe fe-user-plus fe-16"></i>
                 <span class="ml-3 item-text">Usuarios</span>
               </a>
             </li>
+          {% endif %}
 
 <!--soporte-->
             <li class="nav-item dropdown">

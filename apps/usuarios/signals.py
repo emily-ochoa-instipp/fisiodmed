@@ -23,7 +23,7 @@ def crear_perfil_usuario(sender, instance, created, **kwargs):
                 with open(ruta_default, 'rb') as img:
                     usuario.foto.save('default.png', File(img), save=True)
 
-        grupo_defecto = "Secretaria" 
+        grupo_defecto = "Administrador" 
 
         # crea el grupo si no existe
         grupo, _ = Group.objects.get_or_create(name=grupo_defecto)
