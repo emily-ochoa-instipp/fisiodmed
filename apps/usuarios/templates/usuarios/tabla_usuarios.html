@@ -9,189 +9,110 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de usuarios</h2>
+              {% if error is not None %}
+                  <div class="alert alert-danger" role="alert">
+                  {{ error }}
+                  </div>
+              {% endif %}
               <div class="row my-4">
+
+                <div class="col-12 mb-3 d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
+                </div>
+
                 <!-- Small table -->
                 <div class="col-md-12">
                   <div class="card shadow">
-                    <div class="card-body">
-
-                      <!--tabla encabezado agregar buscador accion-->
-                      <div class="toolbar row mb-3">
-                        <div class="col">
-                          <form class="form-inline">
-                            <div class="form-row">
-                              <div class="form-group col-auto">
-                                <label for="search" class="sr-only">Buscar</label>
-                                <input type="text" class="form-control" id="search" value="" placeholder="Buscar">
-                              </div>
-                              <div class="form-group col-auto ml-3">
-                                <label class="my-1 mr-2 sr-only" for="inlineFormCustomSelectPref">Estado</label>
-                                <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                                  <option selected>Elegir...</option>
-                                  <option value="1">Processing</option>
-                                  <option value="2">Success</option>
-                                  <option value="3">Pending</option>
-                                  <option value="3">Hold</option>
-                                </select>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                        <div class="col ml-auto">
-                          <div class="dropdown float-right">
-                     
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
-                      
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="actionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Acción </button>
-                            <div class="dropdown-menu" aria-labelledby="actionMenuButton">
-                              <a class="dropdown-item" href="#">Exportar</a>
-                              <a class="dropdown-item" href="#">Eliminar</a>
-                              <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                          </div>
-                          <!-- new event modal -->
-                          <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="varyModalLabel">Agregar usuario</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                    <div class="card-body">                 
+                        <!-- table -->
+                        <table class="table datatables table-hover" id="dataTable-1">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Foto</th>
+                              <th>Nombres</th>
+                              <th>Apellidos</th>
+                              <th>Rol</th>
+                              <th>Correo</th>
+                              <th>Teléfono</th>
+                              <th>Usuario</th>
+                              <th>N°doc</th>
+                              <th>Estado</th>
+                              <th>Acción</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for usuario in usuarios %}
+                            <tr>
+                              <td>{{ usuario.id }}</td>
+                              <td>
+                                <div class="avatar avatar-sm">
+                                  {% if usuario.foto %}
+                                    <img src="{{ usuario.foto.url }}" class="rounded-circle">
+                                  {% else %}
+                                    <img src="{% static 'assets/images/default.png' %}" class="rounded-circle">
+                                  {% endif %}
                                 </div>
-                                <div class="modal-body p-4">
-                                  <form method="post" action="{% url 'registrar_usuario' %}">
-                                    {% csrf_token %}
-                                    {% if error is not None %}
-                                        <div class="alert alert-danger" role="alert">
-                                        {{ error }}
-                                        </div>
-                                    {% endif %}
-                                    <div class="form-row">
-                                      <div class="form-group col-md-6">
-                                        <label for="inputRol">Rol</label>
-                                        <select id="inputRol" class="form-control" name="txtRol" required>
-                                          <option selected>Seleccionar rol</option>
-                                          <option>Paciente</option>
-                                          <option>Médico</option>
-                                          <option>Recepcionista</option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputNombres">Nombres</label>
-                                        <input type="text" class="form-control" id="inputNombres" placeholder="Nombres" name="txtNombres" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputApellidos">Apellidos</label>
-                                        <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos" name="txtApellidos" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputEmail">Email</label>
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Correo" name="txtEmail" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputNumTelf">Número teléfono</label>
-                                        <input type="number" class="form-control" id="inputNumTelf" placeholder="Número de teléfono" name="txtTelefono" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputNumDoc">N°doc</label>
-                                        <input type="text" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputUsername">Username</label>
-                                        <input type="text" class="form-control" id="inputText" placeholder="Nombre de usuario" name="txtUsername" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputPassword">Contraseña</label>
-                                        <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña" name="txtPassword" required>
-                                      </div>
-                                    </div>
-    
-                                    <div class="modal-footer d-flex justify-content-between">
-                                      <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="txtEstado" checked>
-                                        <label class="custom-control-label" for="RepeatSwitch">Activo</label>
-                                      </div>
-                                      <div>
-                                        <button type="submit" class="btn btn-primary mr-4">Guardar</button>
-                                      <!--<button type="submit" class="btn btn-danger">Cancelar</button>-->
-                                        <a href="{% url 'tabla_usuarios' %}" class="btn btn-danger">Cancelar</a>
-                                      </div>
-                                    </div>
-                                  </form>
-                                </div>
-                              </div>
-                            </div>
-                          </div> <!-- new event modal -->
-                        </div>
-                      </div>
+                              </td>
+                              <td>{{ usuario.user.first_name|default:"No registrado" }}</td>
+                              <td>{{ usuario.user.last_name|default:"No registrado"}}</td>
+                              <td>
+                                {% for grupo in usuario.user.groups.all %}
+                                  {{ grupo.name }}
+                                {% empty %}
+                                  Sin rol
+                                {% endfor %}
+                              </td>
+                              <td>{{ usuario.user.email }}</td>
+                              <td>{{ usuario.telefono|default:"No registrado" }}</td>
+                              <td>{{ usuario.user.username }}</td>
+                              <td>{{ usuario.num_doc|default:"No registrado" }}</td>
+                              <td>
+                                  {% if usuario.user.is_active %}
+                                    <span class="badge badge-success">Activo</span>
+                                  {% else %}
+                                    <span class="badge badge-danger">Inactivo</span>
+                                  {% endif %}
+                              </td>
+                        
+                              <td>
+                                <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-secondary mb-1"><span class="fe fe-edit fe-14 "></span></a>
+                              
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ usuario.id }}">
+                                  <span class="fe fe-trash fe-14 "></span>
+                                </button>
 
-
-                      <!-- table -->
-                      <table class="table datatables table-hover" id="dataTable-1">
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Rol</th>
-                            <th>Correo</th>
-                            <th>Teléfono</th>
-                            <th>Usuario</th>
-                            <th>N°doc</th>
-                            <th>Acción</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for usuario in usuarios %}
-                          <tr>
-                            <td>{{ usuario.id }}</td>
-                            <td>{{ usuario.user.first_name }}</td>
-                            <td>{{ usuario.user.last_name }}</td>
-                            <td>{{ usuario.rol }}</td>
-                            <td>{{ usuario.user.email }}</td>
-                            <td>{{ usuario.telefono }}</td>
-                            <td>{{ usuario.user.username }}</td>
-                            <td>{{ usuario.num_doc }}</td>
-                      
-                            <td>
-                              <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
-                             <!-- <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger"><span class="fe fe-trash fe-14 "></span></a>-->
-                             
-                              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ usuario.id }}">
-                                <span class="fe fe-trash fe-14 "></span>
-                              </button>
-
-                              <!-- Modal -->
-                
-                                <div class="modal fade" id="exampleModal{{ usuario.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ usuario.id }}" aria-hidden="true">
-                                  <div class="modal-dialog">
-                                    <div class="modal-content">
-                                      <form method="post" action="{% url 'eliminar_usuario' usuario.id %}">
-                                        {% csrf_token %}
-                                        <div class="modal-header">
-                                          <h5 class="modal-title fs-5" id="exampleModalLabel {{ usuario.id }}">Confirmación de eliminación</h5>
-                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                          ¿Estas seguro de eliminar el usuario {{ usuario.user.first_name }} {{ usuario.user.last_name }}?
-                                        </div>
-                                        <div class="modal-footer">
-                                          <a href="{% url 'tabla_usuarios' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
-                                          <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>-->
-                                          <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </div>
-                                      </form>   
+                                <!-- Modal -->
+                  
+                                  <div class="modal fade" id="exampleModal{{ usuario.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ usuario.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <form method="post" action="{% url 'eliminar_usuario' usuario.id %}">
+                                          {% csrf_token %}
+                                          <div class="modal-header">
+                                            <h5 class="modal-title fs-5" id="exampleModalLabel {{ usuario.id }}">Confirmación de eliminación</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                            ¿Estas seguro de eliminar el usuario {{ usuario.user.first_name }} {{ usuario.user.last_name }}?
+                                          </div>
+                                          <div class="modal-footer">
+                                            <a href="{% url 'tabla_usuarios' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
+                                            <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>-->
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                          </div>
+                                        </form>   
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                            </td>
-                          </tr>
-                           {% empty %}
-                          <tr><td colspan="9">No hay usuarios registrados</td></tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>                     
+                              </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="9">No hay usuarios registrados</td></tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>                     
+                      </div>
                     </div>
                   </div>
                 </div> <!-- simple table -->
@@ -200,6 +121,81 @@
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
       </main> <!-- main -->
+
+      <!-- new event modal -->
+        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="varyModalLabel">Agregar usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body p-4">
+                <form method="post" action="{% url 'registrar_usuario' %}">
+                  {% csrf_token %}
+                  {% if error is not None %}
+                      <div class="alert alert-danger" role="alert">
+                      {{ error }}
+                      </div>
+                  {% endif %}
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputNombres">Nombres</label>
+                      <input type="text" class="form-control" id="inputNombres" placeholder="Nombres" name="txtNombres" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputApellidos">Apellidos</label>
+                      <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos" name="txtApellidos" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputRol">Rol</label>
+                      <select name="txtRol" class="form-control" required>
+                        <option value="">Seleccionar rol</option>
+                        {% for rol in roles %}
+                          <option value="{{ rol.name }}">{{ rol.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail">Email</label>
+                      <input type="email" class="form-control" id="inputEmail" placeholder="Correo" name="txtEmail" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputNumTelf">Número teléfono</label>
+                      <input type="number" class="form-control" id="inputNumTelf" placeholder="Número de teléfono" name="txtTelefono" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputNumDoc">N°doc</label>
+                      <input type="text" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputUsername">Username</label>
+                      <input type="text" class="form-control" id="inputText" placeholder="Nombre de usuario" name="txtUsername" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputPassword">Contraseña</label>
+                      <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña" name="txtPassword" required>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer d-flex justify-content-between">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="txtEstado" checked>
+                      <label class="custom-control-label" for="RepeatSwitch">Activo</label>
+                    </div>
+                    <div>
+                      <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                    <!--<button type="submit" class="btn btn-danger">Cancelar</button>-->
+                      <a href="{% url 'tabla_usuarios' %}" class="btn btn-danger">Cancelar</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div> <!-- new event modal -->
     
     <script>
       $('#dataTable-1').DataTable(
@@ -207,7 +203,7 @@
         autoWidth: true,
         "lengthMenu": [    
           [16, 32, 64, -1],
-          [16, 32, 64, "All"]
+          [16, 32, 64, "Todos"]
         ]
       });
     </script>
@@ -227,3 +223,13 @@
   </body>
 </html>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+

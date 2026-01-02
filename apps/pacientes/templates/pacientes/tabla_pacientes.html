@@ -9,153 +9,13 @@
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de pacientes</h2>
               <div class="row my-4">
+                <div class="col-12 mb-3 d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
+                </div>
                 <!-- Small table -->
                 <div class="col-md-12">
                   <div class="card shadow">
                     <div class="card-body">
-
-                        <!--tabla encabezado agregar buscador accion-->
-                      <div class="toolbar row mb-3">
-                        <div class="col">
-                          <form class="form-inline">
-                            <div class="form-row">
-                              <div class="form-group col-auto">
-                                <label for="search" class="sr-only">Buscar</label>
-                                <input type="text" class="form-control" id="search" value="" placeholder="Buscar">
-                              </div>
-                              <div class="form-group col-auto ml-3">
-                                <label class="my-1 mr-2 sr-only" for="inlineFormCustomSelectPref">Estado</label>
-                                <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                                  <option selected>Elegir...</option>
-                                  <option value="1">Processing</option>
-                                  <option value="2">Success</option>
-                                  <option value="3">Pending</option>
-                                  <option value="3">Hold</option>
-                                </select>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                        <div class="col ml-auto">
-                          <div class="dropdown float-right">
-                     
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
-                      
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="actionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Acción </button>
-                            <div class="dropdown-menu" aria-labelledby="actionMenuButton">
-                              <a class="dropdown-item" href="#">Exportar</a>
-                              <a class="dropdown-item" href="#">Eliminar</a>
-                              <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                          </div>
-                          <!-- new event modal -->
-                          <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="varyModalLabel">Agregar paciente</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body p-4">
-                                  <form method="post" action="{% url 'registrar_paciente' %}">
-                                    {% csrf_token %}
-                                    {% if error is not None %}
-                                        <div class="alert alert-danger" role="alert">
-                                        {{ error }}
-                                        </div>
-                                    {% endif %}
-                                    <div class="form-row">
-                                      <div class="form-group col-md-6">
-                                        <label for="inputNombres">Nombres</label>
-                                        <input type="text" class="form-control" id="inputNombres" placeholder="Nombres" name="txtNombres" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputApellidos">Apellidos</label>
-                                        <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos" name="txtApellidos" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputFchNac">Fecha de nacimiento</label>
-                                        <input type="date" class="form-control" id="inputFchNac" placeholder="Fecha de nacimiento" name="txtFechNacimiento" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputEdad">Edad</label>
-                                        <input type="number" class="form-control" id="inputEdad" placeholder="Edad" name="txtEdad" readonly>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputSexo">Sexo</label required>
-                                        <select id="inputSexo" class="form-control" name="txtSexo">
-                                          <option selected>Seleccionar sexo</option required>
-                                          <option>Femenino</option>
-                                          <option>Masculino</option>
-                                          <option>Otro</option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputTipoSangre">Tipo de sangre</label>
-                                        <select id="inputTipoSangre" class="form-control" name="txtTipoSangre" required>
-                                          <option selected>Seleccionar tipo de sangre</option>
-                                          <option>A+</option>
-                                          <option>B+</option>
-                                          <option>AB+</option>
-                                          <option>O+</option>
-                                        </select>
-                                      </div>
-                                      <!--<div class="form-group col-md-6">
-                                        <label for="inputTipoDoc">Tipo documento</label>
-                                        <select id="inputTipoDoc" class="form-control" name="txtTipoDoc" required>
-                                          <option selected>Seleccionar tipo</option>
-                                          <option>Cédula</option>
-                                          <option>Pasaporte</option>
-                                          <option>Otro</option>
-                                        </select>
-                                      </div> -->
-                                      <div class="form-group col-md-6">
-                                        <label for="inputNumDoc">Número documento</label>
-                                        <input type="number" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputNumTelf">Número teléfono</label>
-                                        <input type="number" class="form-control" id="inputNumTelf" placeholder="Número de teléfono" name="txtTelefono" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputEmail">Email</label>
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="txtEmail" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputDireccion">Dirección</label>
-                                        <input type="text" class="form-control" id="inputDireccion" placeholder="Dirección" name="txtDireccion" required>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputEstadoCivil">Estado civil</label>
-                                        <select id="inputEstadoCivil" class="form-control" name="txtEstadoCivil" required>
-                                          <option selected>Seleccionar estado civil</option>
-                                          <option>Casad@</option>
-                                          <option>Solter@</option>
-                                          <option>Viud@</option>
-                                        </select>
-                                      </div>
-                                    </div> 
-                                    <div class="modal-footer d-flex justify-content-between">
-                                      <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
-                                        <label class="custom-control-label" for="RepeatSwitch">Activo</label>
-                                      </div>
-                                      <div>
-                                        <button type="submit" class="btn btn-primary mr-4">Guardar</button>
-                                        <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>
-                                      </div>
-                                    </div>
-                                  </form>
-                                </div>
-                              </div>
-                            </div>
-                          </div> <!-- new event modal -->
-                        </div>
-                      </div>
-
-
                       <!-- table -->
                       <table class="table datatables table-hover" id="dataTable-1">
                         <thead>
@@ -231,7 +91,111 @@
         </div> <!-- .container-fluid -->
 
       </main> <!-- main -->
-     
+      <!-- new event modal -->
+      <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="varyModalLabel">Agregar paciente</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body p-4">
+              <form method="post" action="{% url 'registrar_paciente' %}">
+                {% csrf_token %}
+                {% if error is not None %}
+                    <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                    </div>
+                {% endif %}
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="inputNombres">Nombres</label>
+                    <input type="text" class="form-control" id="inputNombres" placeholder="Nombres" name="txtNombres" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputApellidos">Apellidos</label>
+                    <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos" name="txtApellidos" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputFchNac">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="inputFchNac" placeholder="Fecha de nacimiento" name="txtFechNacimiento" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputEdad">Edad</label>
+                    <input type="number" class="form-control" id="inputEdad" placeholder="Edad" name="txtEdad" readonly>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputSexo">Sexo</label required>
+                    <select id="inputSexo" class="form-control" name="txtSexo">
+                      <option selected>Seleccionar sexo</option required>
+                      <option>Femenino</option>
+                      <option>Masculino</option>
+                      <option>Otro</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputTipoSangre">Tipo de sangre</label>
+                    <select id="inputTipoSangre" class="form-control" name="txtTipoSangre" required>
+                      <option selected>Seleccionar tipo de sangre</option>
+                      <option>A+</option>
+                      <option>B+</option>
+                      <option>AB+</option>
+                      <option>O+</option>
+                    </select>
+                  </div>
+                  <!--<div class="form-group col-md-6">
+                    <label for="inputTipoDoc">Tipo documento</label>
+                    <select id="inputTipoDoc" class="form-control" name="txtTipoDoc" required>
+                      <option selected>Seleccionar tipo</option>
+                      <option>Cédula</option>
+                      <option>Pasaporte</option>
+                      <option>Otro</option>
+                    </select>
+                  </div> -->
+                  <div class="form-group col-md-6">
+                    <label for="inputNumDoc">Número documento</label>
+                    <input type="number" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputNumTelf">Número teléfono</label>
+                    <input type="number" class="form-control" id="inputNumTelf" placeholder="Número de teléfono" name="txtTelefono" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="txtEmail" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputDireccion">Dirección</label>
+                    <input type="text" class="form-control" id="inputDireccion" placeholder="Dirección" name="txtDireccion" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputEstadoCivil">Estado civil</label>
+                    <select id="inputEstadoCivil" class="form-control" name="txtEstadoCivil" required>
+                      <option selected>Seleccionar estado civil</option>
+                      <option>Casad@</option>
+                      <option>Solter@</option>
+                      <option>Viud@</option>
+                    </select>
+                  </div>
+                </div> 
+                <div class="modal-footer d-flex justify-content-between">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
+                    <label class="custom-control-label" for="RepeatSwitch">Activo</label>
+                  </div>
+                  <div>
+                    <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                    <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div> <!-- new event modal -->
+  
     <script>
       window.dataLayer = window.dataLayer || [];
 

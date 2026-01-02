@@ -9,126 +9,19 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de pagos</h2>
+              {% if error is not None %}
+                  <div class="alert alert-danger" role="alert">
+                  {{ error }}
+                  </div>
+              {% endif %}
               <div class="row my-4">
+                <div class="col-12 mb-3 d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
+                </div>
                 <!-- Small table -->
                 <div class="col-md-12">
                   <div class="card shadow">
                     <div class="card-body">
-
-                        <!--tabla encabezado agregar buscador accion-->
-                      <div class="toolbar row mb-3">
-                        <div class="col">
-                          <form class="form-inline">
-                            <div class="form-row">
-                              <div class="form-group col-auto">
-                                <label for="search" class="sr-only">Buscar</label>
-                                <input type="text" class="form-control" id="search" value="" placeholder="Buscar">
-                              </div>
-                              <div class="form-group col-auto ml-3">
-                                <label class="my-1 mr-2 sr-only" for="inlineFormCustomSelectPref">Estado</label>
-                                <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                                  <option selected>Elegir...</option>
-                                  <option value="1">Processing</option>
-                                  <option value="2">Success</option>
-                                  <option value="3">Pending</option>
-                                  <option value="3">Hold</option>
-                                </select>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                        <div class="col ml-auto">
-                          <div class="dropdown float-right">
-                     
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
-                      
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="actionMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Acción </button>
-                            <div class="dropdown-menu" aria-labelledby="actionMenuButton">
-                              <a class="dropdown-item" href="#">Exportar</a>
-                              <a class="dropdown-item" href="#">Eliminar</a>
-                              <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                          </div>
-                          <!-- new event modal -->
-                          <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="varyModalLabel">Agregar pago</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body p-4">
-                                  <form>
-                                    <div class="form-row">
-                                      <div class="form-group col-md-6">
-                                        <label for="inputPaciente">Paciente</label>
-                                        <select id="inputPaciente" class="form-control">
-                                          <option selected>Seleccionar paciente</option>
-                                          <option>Emily Ochoa</option>
-                                          <option>Fabian Hernandez</option>
-                                          <option>Melissa Ambuludi</option>
-                                          <option>Anais Granda</option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputFch">Fecha</label>
-                                        <input type="date" class="form-control" id="inputFchN" placeholder="Fecha">
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputServicio">Servicio</label>
-                                        <select id="inputServicio" class="form-control">
-                                          <option selected>Seleccionar servicio</option>
-                                          <option>Rehabilitación</option>
-                                          <option>Consulta</option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputMedio">Medio</label>
-                                        <select id="inputMedio" class="form-control">
-                                          <option selected>Seleccionar medio</option>
-                                          <option>Efectivo</option>
-                                          <option>Tranferencia</option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputMontoT">Monto total</label>
-                                        <input type="number" class="form-control" id="inputMontoT" placeholder="Monto total">
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputMontoP">Monto pendiente</label>
-                                        <input type="number" class="form-control" id="inputMontoP" placeholder="Monto pendiente">
-                                      </div>
-                                      <div class="form-group col-md-6">
-                                        <label for="inputEstado">Estado</label>
-                                        <select id="inputEstado" class="form-control">
-                                          <option selected>Seleccionar estado</option>
-                                          <option>Pago parcial</option>
-                                          <option>otro</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                  </form>
-                                </div>
-
-                                <div class="modal-footer d-flex justify-content-between">
-                                  <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
-                                    <label class="custom-control-label" for="RepeatSwitch">Activo</label>
-                                  </div>
-                                  <div>
-                                    <button type="submit" class="btn btn-primary mr-4">Guardar</button>
-                                    <button type="submit" class="btn btn-danger">Cancelar</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div> <!-- new event modal -->
-                        </div>
-                      </div>
-
-
                       <!-- table -->
                       <table class="table datatables" id="dataTable-1">
                         <thead>
@@ -155,7 +48,7 @@
                             <td>High Wycombe</td>
                             <td>Jun 8, 2019</td>
                             <td>
-                               <a href="{% url 'editar_pago' %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
+                              <a href="{% url 'editar_pago' %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
                               
                               <!-- Button trigger modal -->
                               <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
@@ -193,6 +86,82 @@
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
       </main> <!-- main -->
+      <!-- new event modal -->
+      <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="varyModalLabel">Agregar pago</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body p-4">
+              <form>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="inputPaciente">Paciente</label>
+                    <select id="inputPaciente" class="form-control">
+                      <option selected>Seleccionar paciente</option>
+                      <option>Emily Ochoa</option>
+                      <option>Fabian Hernandez</option>
+                      <option>Melissa Ambuludi</option>
+                      <option>Anais Granda</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputFch">Fecha</label>
+                    <input type="date" class="form-control" id="inputFchN" placeholder="Fecha">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputServicio">Servicio</label>
+                    <select id="inputServicio" class="form-control">
+                      <option selected>Seleccionar servicio</option>
+                      <option>Rehabilitación</option>
+                      <option>Consulta</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputMedio">Medio</label>
+                    <select id="inputMedio" class="form-control">
+                      <option selected>Seleccionar medio</option>
+                      <option>Efectivo</option>
+                      <option>Tranferencia</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputMontoT">Monto total</label>
+                    <input type="number" class="form-control" id="inputMontoT" placeholder="Monto total">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputMontoP">Monto pendiente</label>
+                    <input type="number" class="form-control" id="inputMontoP" placeholder="Monto pendiente">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputEstado">Estado</label>
+                    <select id="inputEstado" class="form-control">
+                      <option selected>Seleccionar estado</option>
+                      <option>Pago parcial</option>
+                      <option>otro</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-between">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
+                <label class="custom-control-label" for="RepeatSwitch">Activo</label>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                <button type="submit" class="btn btn-danger">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- new event modal -->
       
     <script>
       $('#dataTable-1').DataTable(
