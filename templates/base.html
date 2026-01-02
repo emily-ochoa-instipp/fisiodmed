@@ -8,15 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="{% static 'assets/images/logo-web.png' %}">
     <title>Fisiodmed</title>
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="{% static 'css/simplebar.css' %}">
     <!-- Fonts CSS -->
-    <link rel="stylesheet" href="{% static 'css/css2.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Icons CSS -->
     <link rel="stylesheet" href="{% static 'css/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap4.css' %}">
     <link rel="stylesheet" href="{% static 'css/select2.css' %}">
     <link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
     <link rel="stylesheet" href="{% static 'css/uppy.min.css' %}">
@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="{% static 'css/daterangepicker.css' %}">
     <!-- App CSS -->
     <link rel="stylesheet" href="{% static 'css/app-light.css' %}" id="lightTheme">
-    <link rel="stylesheet" href="{% static 'css/app-dark.css' %}" id="darkTheme" disabled>
     <!-- FullCalendar CSS -->
     <link rel="stylesheet" href="css/fullcalendar.css">
     <link rel="stylesheet" href="css/select2.css">
@@ -47,26 +46,17 @@
         <form class="form-inline mr-auto searchform text-muted">
           <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search" placeholder="Buscar..." aria-label="Search">
         </form>
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="light">
-              <i class="fe fe-sun fe-16"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
-              <span class="fe fe-grid fe-16"></span>
-            </a>
-          </li>
-          <li class="nav-item nav-notif">
-            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
-              <span class="fe fe-bell fe-16"></span>
-              <span class="dot dot-md bg-success"></span>
-            </a>
-          </li>
+        <ul class="nav d-flex align-items-center">
+          <span class="nav-link">{{ user.first_name }} {{ user.last_name }}</span>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted pr-0 my-1" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="material-symbols-outlined">account_circle</span>
+              <span class="avatar avatar-sm mt-2">
+                {% if usuario.foto %}
+                  <img src="{{ usuario.foto.url }}" class="avatar-img rounded-circle">
+                {% else %}
+                  <img src="{% static 'assets/images/default.png' %}" class="avatar-img rounded-circle">
+                {% endif %}
+              </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
               <a class="dropdown-item" href="{% url 'profile' %}">Pérfil</a>
@@ -83,7 +73,7 @@
 
           <!-- nav bar -->
           <div class="w-100 mb-4 d-flex">
-            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{% url 'index' %}">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{% url 'inicio' %}">
               <img class="logo" src="{% static 'assets/images/logo1.png' %}" alt="Logo" class="navbar-brand-img brand-sm">
             </a>
           </div>
@@ -99,19 +89,7 @@
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
                 <li class="nav-item active">
-                  <a class="nav-link pl-3" href="{% url 'index' %}"><span class="ml-1 item-text">Default</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'dashboard_analytics' %}"><span class="ml-1 item-text">Analytics</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'dashboard_sales' %}"><span class="ml-1 item-text">E-commerce</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'dashboard_saas' %}"><span class="ml-1 item-text">Saas Dashboard</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'dashboard_system' %}"><span class="ml-1 item-text">Systems</span></a>
+                  <a class="nav-link pl-3" href="{% url 'inicio' %}"><span class="ml-1 item-text">Default</span></a>
                 </li>
               </ul>
 <!--MENU-->

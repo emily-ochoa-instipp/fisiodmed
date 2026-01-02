@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from apps.usuarios.models import Usuario
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db.models import Q
+from django.contrib.auth import update_session_auth_hash #funcion para evitar q se cierre la sesion luego de cambiar la contraseña
 from apps.pacientes.models import Paciente
 from apps.medicos.models import Medico
 from apps.especialidades.models import Especialidad
+
+from django.urls import reverse
+from django.contrib import messages
+from django.contrib.auth import password_validation 
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 
@@ -17,73 +22,67 @@ def tabla_usuarios(request):
         'usuarios': usuarios
     })
 
+@login_required
 def registrar_usuario(request):
     if request.method == 'POST':
+            first_name_ = request.POST.get('txtNombres')
+            last_name_ = request.POST.get('txtApellidos')
+            email_ = request.POST.get('txtEmail')
+            num_doc_ = request.POST.get('txtNumDoc')
+            username_ = request.POST.get('txtUsername')
+            password_ = request.POST.get('txtPassword')
+            rol_ = request.POST.get('txtRol')
+            telefono_ = request.POST.get('txtTelefono')
 
-        first_name_ = request.POST['txtNombres']
-        last_name_= request.POST['txtApellidos']
-        email_ = request.POST['txtEmail']
-        num_doc_ = request.POST['txtNumDoc']
-        username_ = request.POST['txtUsername']
-        password_ = request.POST['txtPassword']
-        rol_ = request.POST['txtRol']
-        telefono_ = request.POST['txtTelefono']
+            # Verificar duplicados
+            users = User.objects.filter(Q(username__iexact=username_) | Q(email__iexact=email_))
+            usuarios = Usuario.objects.filter(Q(num_doc__iexact=num_doc_))
 
-        users = User.objects.filter(
-            Q(username__iexact=username_) |
-            Q(email__iexact=email_)
-        )
-
-        usuarios = Usuario.objects.filter(
-            Q(num_doc__iexact=num_doc_)
-        )
-
-        if users.exists() or usuarios.exists():
-            return render(request, 'usuarios/tabla_usuarios.html', {
-                'error': 'Ya existe un usuario con ese nombre de usuario, email o cédula'
-            })
-        else:
-            userCreate = User.objects.create_user(
-                first_name=first_name_, last_name=last_name_, email=email_, username=username_, password=password_)
-
-            usuarioCreate = Usuario.objects.create(
-                user=userCreate, telefono=telefono_, num_doc=num_doc_, rol=rol_)
+            if users.exists() or usuarios.exists():
+                return render(request, 'usuarios/tabla_usuarios.html', {
+                    'usuarios': Usuario.objects.all(),
+                    'error': 'Ya existe un usuario con ese nombre de usuario, email o cédula',
+                })
             
-            if rol_ == 'Paciente':
-                Paciente.objects.create(
-                    usuario=usuarioCreate,
-                    fecha_nac=None,
-                    edad=None,
-                    sexo=None,
-                    tipo_sangre=None,
-                    #num_doc=num_doc_,  
-                    direccion=None,
-                    estado_civil=None
-                )
-            if rol_ == 'Medico':
-                Medico.objects.create(
-                    usuario=usuarioCreate,
-                    direccion=None,
-                    especialidad=None,
-                )
 
-        return redirect('tabla_usuarios')
+            # Crear el usuario base
+            user = User.objects.create_user(
+                first_name=first_name_,
+                last_name=last_name_,
+                email=email_,
+                username=username_,
+                password=password_
+            )
+
+            user.is_active = True   # Activo por defecto
+            user.save()
+
+            #perfil Usuario se crea automáticamente por signals.py
+            usuario = user.usuario
+            usuario.telefono = telefono_
+            usuario.num_doc = num_doc_
+            usuario.save()
+
+            return redirect('tabla_usuarios')
     
-    return render(request, 'usuarios/tabla_usuarios.html')
+    return redirect('tabla_usuarios')
 
 @login_required
 def editar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
     if request.method == 'POST':
+        user = usuario.user
         #user
         usuario.user.first_name = request.POST.get('txtNombres')
         usuario.user.last_name = request.POST.get('txtApellidos')
         usuario.user.email = request.POST.get('txtEmail')
         usuario.user.username = request.POST.get('txtUsername')
-        usuario.user.set_password = request.POST.get('txtPassword')
+        if 'estado' in request.POST:
+            user.is_active = True
+        else:
+            user.is_active = False
         
         #usuario     
-        usuario.rol = request.POST.get('txtRol')
         usuario.num_doc = request.POST.get('txtNumDoc')
         usuario.telefono = request.POST.get('txtTelefono')
         usuario.user.save()
@@ -99,6 +98,98 @@ def eliminar_usuario(request, usuario_id):
     return redirect('tabla_usuarios')
 
 @login_required
-def profile(request, usuario_id):
-    return render(request, 'usuarios/profile.html')
+def profile(request):
+    usuario, _ = Usuario.objects.get_or_create(user=request.user)
 
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+
+        # URL base
+        profile_url = reverse('profile')       
+
+        if form_type == 'perfil':
+            # actualizar campos user
+            user = request.user
+            user.first_name = request.POST.get('txtNombres')
+            user.last_name = request.POST.get('txtApellidos')
+            user.email = request.POST.get('txtEmail')
+            user.save()
+
+            # actualizar campos de modelo usuario
+            usuario.telefono = request.POST.get('txtTelefono')
+            usuario.num_doc = request.POST.get('txtNumDoc')
+
+            if 'foto' in request.FILES:
+                usuario.foto = request.FILES['foto']
+
+            usuario.save()
+        
+            messages.success(request, 'Datos del perfil actualizados correctamente.')
+            return redirect(profile_url + '#perfil')
+    
+        elif form_type == 'cuenta':
+            # Obtener nuevo nombre de usuario y confirmación de contraseña
+            nuevo_usuario = request.POST.get('txtNewUsername')
+            confirm_password = request.POST.get('txtPassword')
+
+            # Verificar si realmente hay un cambio de nombre de usuario
+            if nuevo_usuario and nuevo_usuario != request.user.username:     
+
+                # Verificar si el usuario ingresó la contraseña correcta
+                if not request.user.check_password(confirm_password):
+                    messages.error(request, 'La contraseña no es correcta. No se pudo cambiar el nombre de usuario.')
+                    return redirect(profile_url + '#cuenta')
+
+                # Verificar si el nombre de usuario ya está en uso
+                if User.objects.filter(username=nuevo_usuario).exclude(pk=request.user.pk).exists():
+                    messages.error(request, 'El nombre de usuario ya está en uso.')
+                    return redirect(profile_url + '#cuenta')
+
+                # Actualizar nombre de usuario
+                request.user.username = nuevo_usuario
+                request.user.save()
+
+                messages.success(request, 'Nombre de usuario actualizado correctamente.')
+                # Redirige y usa el hash para volver al tab 'cuenta'
+                return redirect(profile_url + '#cuenta')
+            
+            else:
+                messages.warning(request, 'No se ingresó un nuevo nombre de usuario o es igual al actual.')
+                return redirect(profile_url + '#cuenta')
+
+
+        elif form_type == 'contrasena':
+            current_password = request.POST.get('txtPassword')
+            new_password = request.POST.get('txtNewPassword')
+            confirm_new_password = request.POST.get('txtConfNewPass')
+            
+            # verificar coincidencia ntre nueva contraseña y la confirmacion
+            if new_password != confirm_new_password:
+                messages.error(request, 'La nueva contraseña y la confirmación no coinciden.')
+                return redirect(profile_url + '#contrasena')
+
+            # Verificar la contraseña actual
+            if not request.user.check_password(current_password):
+                messages.error(request, 'La contraseña actual no es correcta.')
+                return redirect(profile_url + '#contrasena')
+
+            # Reglas de Validación de Django
+            try:
+                password_validation.validate_password(new_password, user=request.user)
+                
+            except ValidationError as e:
+                for error in e.messages:
+                    messages.error(request, error)
+                return redirect(profile_url + '#contrasena')
+
+            # Cambiar la contraseña
+            request.user.set_password(new_password)
+            request.user.save()
+            
+            # Mantener la sesión de usuario activa 
+            update_session_auth_hash(request, request.user)
+
+            messages.success(request, 'Contraseña actualizada correctamente.')
+            return redirect(profile_url + '#contrasena')
+        
+    return render(request, 'usuarios/profile.html', {'usuario': usuario})
