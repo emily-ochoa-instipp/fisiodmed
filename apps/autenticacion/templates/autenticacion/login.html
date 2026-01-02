@@ -1,89 +1,49 @@
+{% extends 'base-login.html' %}
 {% load static %}
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
-    <title>Fisiodmed</title>
-    <link rel="stylesheet" href="{% static 'css/simplebar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/css2.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/feather.css' %}">
-    <link rel="stylesheet" href="{% static 'css/app-light.css' %}" id="lightTheme">
-    <link rel="stylesheet" href="{% static 'css/app-dark.css' %}" id="darkTheme" disabled>
-    <!--<link rel="stylesheet" href="{% static 'css/custom-dashboard.css' %}"> -->
-    <link rel="stylesheet" href="{% static 'css/fisiomed_login.css' %}"> 
-  </head>
-  <body class="light">
-    <div class="wrapper">
-      <div class="logo">
-        <img src="{% static 'assets/images/fisiomed_logo.png' %}" alt="Fisiomed Logo">
+{% block contenido %}
+
+  <h1 class="h5 mb-1">INICIO DE SESIÓN</h1> <p class="mb-3">¡Bienvenid@!</p>
+  <form class="text-left" action="{% url 'login' %}" id="loginForm" method="POST">
+    {% csrf_token %}
+
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
       </div>
-      <div class="login-container">
-            <h1 class="h5 mb-1">INICIO DE SESIÓN</h1> <p class="mb-3">¡Bienvenid@!</p>
-            <form class="text-left" action="{% url 'login' %}" id="loginForm" method="POST">
-              {% csrf_token %}
-
-              {% if error %}
-                <div class="alert alert-danger" role="alert">
-                  {{ error }}
-                </div>
-              {% endif %}
-              
-              <div class="form-group">
-                <h2 class="h5 mb-1">USUARIO</h2> <label for="input-group-text" class="sr-only">Usuario</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fe fe-mail"></i></span>
-                  </div>
-                  <input type="text" id="inputEmail" class="form-control form-control-lg" placeholder="Ingresar usuario" name="username">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <h2 class="h5 mb-1">CONTRASEÑA</h2> <label for="inputPassword" class="sr-only" >Contraseña</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fe fe-lock"></i></span>
-                  </div>
-                  <input type="password" id="inputPassword" name="password" class="form-control form-control-lg" placeholder="Ingresar contraseña" required>
-                </div>
-              </div>
-              <div class="checkbox mb-3"> <label>
-                  <input type="checkbox" value="remember-me"> Recordarme
-                </label>
-              </div>
-               <!--<input type="submit" value="Ingresar">-->
-              <button class="btn btn-lg btn-primary btn-block" type="submit">
-                <i class="feather icon-arrow-right"></i> Ingresar
-              </button> 
-            </form>
+    {% endif %}
+    
+    <div class="form-group">
+      <h2 class="h5 mb-1">USUARIO</h2> <label for="input-group-text" class="sr-only">Usuario</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fe fe-mail"></i></span>
+        </div>
+        <input type="text" id="inputEmail" class="form-control form-control-lg" placeholder="Ingresar usuario" name="username">
       </div>
     </div>
-  </div>
-  <script src="{% static 'js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/popper.min.js' %}"></script>
-  <script src="{% static 'js/moment.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/simplebar.min.js' %}"></script>
-  <script src="{% static 'js/daterangepicker.js'%}"></script>
-  <script src="{% static 'js/jquery.stickOnScroll.js' %}"></script>
-  <script src="{% static 'js/tinycolor-min.js' %}"></script>
-  <script src="{% static 'js/config.js' %}"></script>
-  <script src="{% static 'js/apps.js' %}"></script>
-  <script async src="{% static 'js/js.js' %}"></script>
-  <script async src="https://www.googleapis.com/analytics.js/analytics.js"></script>
 
-  <!-- <script>
-    // Esta variable será generada por Django y contendrá la URL correcta (ej. "/index/")
-    const INDEX_URL = "{% url 'index' %}";
-  </script> 
+    <div class="form-group">
+      <h2 class="h5 mb-1">CONTRASEÑA</h2> <label for="inputPassword" class="sr-only" >Contraseña</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fe fe-lock"></i></span>
+        </div>
+        <input type="password" id="inputPassword" name="password" class="form-control form-control-lg" placeholder="Ingresar contraseña" required>
+      </div>
+    </div>
+    <div class="checkbox mb-3"> <label>
+        <input type="checkbox" value="remember-me"> Recordarme
+      </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">
+      <i class="feather icon-arrow-right"></i> Ingresar
+    </button> 
+  </form>
+  <p class="mt-4 mb-2 text-center">
+    <a href="{% url 'password_reset' %}">Recuperar contraseña</a>
+    &bull;
+    <a href="{% url 'login'%} " class="text-center">Regresar</a>
+  </p>
 
-  <script src="{% static 'js/fisiomed_login.js' %}"></script>-->
-
-</body>
-</html>
+{% endblock %}
