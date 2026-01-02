@@ -81,83 +81,45 @@
           <p class="text-white nav-heading mt-4 mb-4">
             <span>Menu de opciones</span>
           </p>
-          <ul class="navbar-nav flex-fill w-100 mb-2">
-            <li class="nav-item dropdown">
-              <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="fe fe-home fe-16"></i>
-                <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
-              </a>
-              <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
-                <li class="nav-item active">
-                  <a class="nav-link pl-3" href="{% url 'inicio' %}"><span class="ml-1 item-text">Default</span></a>
-                </li>
-              </ul>
+  
 <!--MENU-->
           <ul class="navbar-nav flex-fill w-100 mb-2">
+<!--dashboard-->
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'inicio' %}">
+                <i class="fe fe-home fe-16"></i>
+                <span class="ml-3 item-text">Dashboard</span>
+              </a>
+            </li>
 <!--Pacientes-->
-            <li class="nav-item dropdown">
-              <a href="#pacientesMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_pacientes' %}">
                 <i class="fe fe-users fe-16"></i>
                 <span class="ml-3 item-text">Pacientes</span>
               </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="pacientesMenu">
-                <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_pacientes' %}"><span class="ml-1 item-text">Listar pacientes</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--Pacientes-->
 <!--medicos-->
-            <li class="nav-item dropdown">
-              <a href="#medicosMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_medicos' %}">
                 <i class="fe fe-users fe-16"></i>
                 <span class="ml-3 item-text">Médicos</span>
               </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="medicosMenu">
-                <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_medicos' %}"><span class="ml-1 item-text">Listar médicos</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--medicos-->
 <!--especialidades-->
-            <li class="nav-item dropdown">
-              <a href="#especialidadesMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="fe fe-activity fe-16"></i>
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_especialidades' %}">
+                <i class="fe fe-folder-plus fe-16"></i>
                 <span class="ml-3 item-text">Especialidades</span>
               </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="especialidadesMenu">
-                <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_especialidades' %}"><span class="ml-1 item-text">Listar especialidades</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--especialidades-->
 <!--Servicios-->
-            <li class="nav-item dropdown">
-              <a href="#serviciosMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="fe fe-folder-plus fe-16"></i>
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_servicios' %}">
+                <i class="fe fe-activity fe-16"></i>
                 <span class="ml-3 item-text">Servicios</span>
               </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="serviciosMenu">
-                <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_servicios' %}"><span class="ml-1 item-text">Listar servicios</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--Servicios-->
+
 <!--Agenda-->
             <li class="nav-item dropdown">
               <a href="#agendaMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
@@ -180,58 +142,32 @@
               </ul>
             </li>
 <!--Pagos-->
-            <li class="nav-item dropdown">
-              <a href="#pagosMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_pagos' %}">
                 <i class="fe fe-credit-card fe-16"></i>
                 <span class="ml-3 item-text">Pagos</span>
               </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="pagosMenu">
-                <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_pagos' %}"><span class="ml-1 item-text">Listar pagos</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--pagos-->
 <!--Reportes-->
-            <li class="nav-item dropdown">
-              <a href="#reportesMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_reportes' %}">
                 <i class="fe fe-trending-up fe-16"></i>
                 <span class="ml-3 item-text">Reportes</span>
               </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="reportesMenu">
-                <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_reportes' %}"><span class="ml-1 item-text">Exportar</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--Reportes-->
 <!--Usuarios-->
-            <li class="nav-item dropdown">
-              <a href="#usuariosMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_usuarios' %}">
                 <i class="fe fe-user-plus fe-16"></i>
                 <span class="ml-3 item-text">Usuarios</span>
               </a>
-               <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="usuariosMenu">
-                 <!--Listado-->
-                <li class="nav-item">
-                  <a class="nav-link pl-3" href="{% url 'tabla_usuarios' %}"><span class="ml-1 item-text">Listar usuarios</span></a>
-                </li>
-              </ul>
-              <!--Submenu-->
             </li>
-            <!--Usuarios-->
+
 <!--soporte-->
-               <li class="nav-item dropdown">
+            <li class="nav-item dropdown">
               <a href="#support" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                 <i class="fe fe-compass fe-16"></i>
-                <span class="ml-3 item-text">Help Desk</span>
+                <span class="ml-3 item-text">Soporte</span>
               </a>
               <!--Submenu-->
               <ul class="collapse list-unstyled pl-4 w-100" id="support">
