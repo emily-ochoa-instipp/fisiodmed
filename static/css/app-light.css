@@ -4307,7 +4307,7 @@ a.close.disabled {
     .bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
       top: 0;
       border-width: 0.4rem 0.4rem 0;
-      border-top-color: #000; }
+      border-top-color: #ffffff; }
 
 .bs-tooltip-right, .bs-tooltip-auto[x-placement^="right"] {
   padding: 0 0.4rem; }
@@ -4341,12 +4341,41 @@ a.close.disabled {
       border-left-color: #000; }
 
 .tooltip-inner {
-  max-width: 200px;
-  padding: 0.25rem 0.5rem;
-  color: #ffffff;
-  text-align: center;
-  background-color: #000;
-  border-radius: 0.25rem; }
+  max-width: 300;
+  padding: 0;
+  color: black;
+  text-align: left;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+/* Encabezado de la card flotante */
+.tooltip-header {
+    background-color: var(--primary); 
+    color: white;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tooltip-body {
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.tooltip-body strong {
+    color: #636e72;
+    font-size: 11px;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 5px;
+}
 
 .popover {
   position: absolute;
@@ -8163,8 +8192,8 @@ svg.navbar-brand-img {
 
 .fc-bootstrap .fc-event {
   color: #ffffff;
-  background-color: #3ad29f;
-  border-color: #3ad29f; }
+  background-color: var(--primary);
+  border-color: var(--primary); }
   .fc-bootstrap .fc-event:hover {
     color: #ffffff; }
 

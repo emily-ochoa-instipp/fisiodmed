@@ -13,7 +13,6 @@
                   <h2 class="page-title">Calendario</h2>
                 </div>
                 <div class="col-auto">
-                  <button type="button" class="btn" data-toggle="modal" data-target=".modal-calendar"><span class="fe fe-filter fe-16 text-muted"></span></button>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal"><span class="fe fe-plus fe-16 mr-3"></span>Crear cita</button>
                 </div>
               </div>
@@ -29,100 +28,80 @@
                       </button>
                     </div>
                     <div class="modal-body p-4">
-                      <form>
+                      <form method="post" action="{% url 'registrar_cita' %}">
+                        {% csrf_token %}
                         <div class="form-row">
                           <div class="form-group col-md-6">
                             <label for="eventType">Paciente</label>
-                            <select id="eventPaciente" class="form-control select2">
-                              <option value="Emily Ochoa">Emily Ochoa</option>  
-                              <option value="Fabian Hernandez">Fabian Hernandez</option>
+                            <select id="eventPaciente" class="form-control select2" name="txtPaciente" required>
+                              {% for paciente in pacientes %}
+                              <option value="{{ paciente.id }}">{{ paciente }}</option>
+                              {% endfor %}
                             </select>
                           </div>
 
                           <div class="form-group col-md-6">
                             <label for="eventType">Especialidad</label>
-                            <select id="eventEspecialidad" class="form-control select2">
-                              <option value="Medicina general">Medicina general</option>
-                              <option value="Fisioterapia">Fisioterapia</option>
+                            <select id="eventEspecialidad" class="form-control select2" name="txtEspecialidad" required>
+                              {% for especialidad in especialidades %}
+                              <option value="{{ especialidad.id }}">{{ especialidad }}</option>
+                              {% endfor %}
                             </select>
                           </div>
 
                           <div class="form-group col-md-6">
                             <label for="eventType">Médico</label>
-                            <select id="eventMedico" class="form-control select2">
-                              <option value="Melissa Ambuludi">Melissa Ambuludi</option>
-                              <option value="Anais Granda">Anais Granda</option>
+                            <select id="eventMedico" class="form-control select2" name="txtMedico" required>
+                              {% for medico in medicos %}
+                              <option value="{{ medico.id }}">{{ medico }}</option>
+                              {% endfor %}
                             </select>
                           </div>
                           <div class="form-group col-md-6">
                             <label for="eventType">Motivo</label>
-                            <select id="eventMotivo" class="form-control select2">
+                            <select id="eventMotivo" class="form-control select2" name="txtMotivo" required>
                               <option value="Sesion de tratamiento">Sesion de tratamiento</option>
                               <option value="Consulta">Consulta</option>
                             </select>
                           </div>
                           <div class="form-group col-md-6">
                             <label for="eventType">Servicio</label>
-                            <select id="eventServicio" class="form-control select2">
-                              <option value="Rehabilitación de rodilla">Rehabilitación de rodilla</option>
+                            <select id="eventServicio" class="form-control select2" name="txtServicio" required>
+                              {% for servicio in servicios %}
+                              <option value="{{ servicio.id }}">{{ servicio }}</option>
+                              {% endfor %}
                             </select>
                           </div>
                           <div class="form-group col-md-6">
-                            <label for="eventType">Consultorio</label>
-                            <select id="eventConsultorio" class="form-control select2">
-                              <option value="1">1</option>
-                            </select>
+                            <label for="inputFch">Fecha</label>
+                            <input type="date" class="form-control" id="inputFch" name="txtFecha" required>
                           </div>
                           <div class="form-group col-md-6">
-                            <label for="date-input1">Fecha</label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
-                              </div>
-                              <input type="text" class="form-control drgpicker" id="drgpicker-start" value="">
-                            </div>
+                            <label for="example-time">Hora</label>
+                            <input class="form-control" id="example-time" type="time" name="txtHora" required>
                           </div>
-                          <div class="form-group col-md-6">
-                            <label for="startDate">Hora</label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text" id="button-addon-time"><span class="fe fe-clock fe-16"></span></div>
-                              </div>
-                              <input type="text" class="form-control time-input" id="start-time" placeholder="10:00 AM">
-                            </div>
-                          </div>
-                          <div class="form-group col-md-6">
-                            <label for="eventType">Frecuencia</label>
-                            <select id="eventFrecuencia" class="form-control select2">
-                              <option value="Luneas a sabado">Luneas a sabado</option>
-                            </select>
-                          </div>
-                           <div class="form-group col-md-6">
-                            <label for="date-input1">Válido hasta</label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
-                              </div>
-                              <input type="text" class="form-control drgpicker" id="drgpicker-start" value="08/24/2020">
-                            </div>
-                          </div>
+                          
                           <div class="form-group col-md-6">
                             <label for="eventType">Duración</label>
-                            <select id="eventDuracion" class="form-control select2">
+                            <select id="eventDuracion" class="form-control select2" name="txtDuracion" required>
                               <option value="45 minutos">45 minutos</option>
                             </select>
+                          </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
+                            <label class="custom-control-label" for="RepeatSwitch">Todo el día</label>
+                          </div>
+                          <div>
+                            <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                            <a href="{% url 'calendar' %}" class="btn btn-danger">Cancelar</a>
                           </div>
                         </div>
                       </form>
                     </div>
 
-                    <div class="modal-footer d-flex justify-content-between">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
-                        <label class="custom-control-label" for="RepeatSwitch">Todo el día</label>
-                      </div>
-                      <button type="button" class="btn mb-2 btn-primary">Guardar</button>
-                    </div>
+                    
                   </div>
                 </div>
               </div> <!-- new event modal -->
@@ -130,17 +109,9 @@
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
     </main>
-     
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/moment.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/simplebar.min.js' %}"></script>
-    <script src="{% static 'js/daterangepicker.js' %}"></script>
-    <script src="{% static 'js/jquery.stickOnScroll.js' %}"></script>
-    <script src="{% static 'js/tinycolor-min.js' %}"></script>
-    <script src="{% static 'js/config.js' %}"></script>
+    
     <script src="{% static 'js/fullcalendar.js' %}"></script>
+    <script src="{% static 'js/es.js' %}"></script>
     <script src="{% static 'js/fullcalendar.custom.js' %}"></script>
     <script>
       /** full calendar */
@@ -154,6 +125,14 @@
             plugins: ['dayGrid', 'timeGrid', 'list', 'bootstrap'],
             timeZone: 'UTC',
             themeSystem: 'bootstrap',
+            locale: 'es',
+            buttonText: {
+                today:    'Hoy',
+                month:    'Mes',
+                week:     'Semana',
+                day:      'Día',
+                list:     'Agenda'
+            },
             header:
             {
               left: 'today, prev, next',
@@ -169,20 +148,48 @@
             },
             weekNumbers: true,
             eventLimit: true, // allow "more" link when too many events
-            events: 'https://fullcalendar.io/demo-events.json'
+            events: '/citas/calendario/',
+            eventRender: function(info) {
+                var medico = info.event.extendedProps.medico;
+                var motivo = info.event.extendedProps.motivo;
+                var servicio = info.event.extendedProps.servicio;
+                var hora = info.event.extendedProps.hora;
+                var paciente = info.event.title;
+
+                // Estructura de Card HTML
+                var tooltipContent = `
+                    <div class="tooltip-card">
+                        <div class="tooltip-header">
+                            <span>Cita Médica</span>
+                            <small>${hora}</small>
+                        </div>
+                        <div class="tooltip-body">
+                            <strong>Paciente</strong>
+                            <div>${paciente}</div>
+                            
+                            <strong>Médico</strong>
+                            <div>${medico}</div>
+                            
+                            <strong>Servicio / Motivo</strong>
+                            <div>${servicio} - ${motivo}</div>
+                        </div>
+                    </div>
+                `;
+
+                $(info.el).tooltip({
+                    title: tooltipContent,
+                    html: true,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body'
+                });
+            }
           });
           calendar.render();
         });
       }
     </script>
-    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
-    <script src="{% static 'js/select2.min.js' %}"></script>
-    <script src="{% static 'js/jquery.steps.min.js' %}"></script>
-    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
     <script src="{% static 'js/jquery.timepicker.js' %}"></script>
-    <script src="{% static 'js/dropzone.min.js' %}"></script>
-    <script src="{% static 'js/uppy.min.js' %}"></script>
-    <script src="{% static 'js/quill.min.js' %}"></script>
     <script>
       $('.select2').select2(
       {
@@ -200,7 +207,15 @@
         showDropdowns: true,
         locale:
         {
-          format: 'MM/DD/YYYY'
+          format: 'DD/MM/YYYY', 
+          applyLabel: 'Aplicar',
+          cancelLabel: 'Cancelar',
+          fromLabel: 'Desde',
+          toLabel: 'Hasta',
+          customRangeLabel: 'Personalizado',
+          daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+          monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          firstDay: 1
         }
       });
       $('.time-input').timepicker(
@@ -235,13 +250,19 @@
         endDate: end,
         ranges:
         {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
+          'Hoy': [moment(), moment()],
+          'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Últimos 7 Días': [moment().subtract(6, 'days'), moment()],
+          'Últimos 30 Días': [moment().subtract(29, 'days'), moment()],
+          'Este Mes': [moment().startOf('month'), moment().endOf('month')],
+          'Mes Pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        locale: {
+              format: 'DD/MM/YYYY',
+              separator: ' - ',
+              applyLabel: 'Aplicar',
+              cancelLabel: 'Cancelar',
+          }
       }, cb);
       cb(start, end);
       $('.input-placeholder').mask("00/00/0000",
@@ -270,75 +291,7 @@
         },
         placeholder: "___.___.___.___"
       });
-      // editor
-      var editor = document.getElementById('editor');
-      if (editor)
-      {
-        var toolbarOptions = [
-          [
-          {
-            'font': []
-          }],
-          [
-          {
-            'header': [1, 2, 3, 4, 5, 6, false]
-          }],
-          ['bold', 'italic', 'underline', 'strike'],
-          ['blockquote', 'code-block'],
-          [
-          {
-            'header': 1
-          },
-          {
-            'header': 2
-          }],
-          [
-          {
-            'list': 'ordered'
-          },
-          {
-            'list': 'bullet'
-          }],
-          [
-          {
-            'script': 'sub'
-          },
-          {
-            'script': 'super'
-          }],
-          [
-          {
-            'indent': '-1'
-          },
-          {
-            'indent': '+1'
-          }], // outdent/indent
-          [
-          {
-            'direction': 'rtl'
-          }], // text direction
-          [
-          {
-            'color': []
-          },
-          {
-            'background': []
-          }], // dropdown with defaults from theme
-          [
-          {
-            'align': []
-          }],
-          ['clean'] // remove formatting button
-        ];
-        var quill = new Quill(editor,
-        {
-          modules:
-          {
-            toolbar: toolbarOptions
-          },
-          theme: 'snow'
-        });
-      }
+      
       // Example starter JavaScript for disabling form submissions if there are invalid fields
       (function()
       {
@@ -400,6 +353,7 @@
       gtag('js', new Date());
       gtag('config', 'UA-56159088-1');
     </script>
+    
   </body>
 </html>
 {% endblock %}

@@ -8,10 +8,13 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de citas</h2>
-              {% if error is not None %}
-                  <div class="alert alert-danger" role="alert">
-                  {{ error }}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                   </div>
+                {% endfor %}
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
@@ -43,7 +46,7 @@
                           {% for cita in citas %}
                           <tr>
                             <td>{{ cita.id }}</td>
-                            <td>{{ cita.paciente.usuario.user.first_name }} {{ cita.paciente.usuario.user.last_name }}</td>
+                            <td>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</td>
                             <td>{{ cita.especialidad.nombre }}</td>
                             <td>{{ cita.medico.usuario.user.first_name }} {{ cita.medico.usuario.user.last_name }}</td>
                             <td>{{ cita.motivo }}</td>
@@ -113,112 +116,79 @@
             <div class="modal-body p-4">
               <form method="post" action="{% url 'registrar_cita' %}">
                 {% csrf_token %}
-                {% if error is not None %}
-                    <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                    </div>
-                {% endif %}
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <label for="inputPaciente">Paciente</label>
-                    <select id="inputPaciente" class="form-control select2" name="txtPaciente">
-                            <option value="">Seleccionar</option>
-                        {% for paciente in pacientes %}
-                            <option value="{{ paciente.id }}">{{ paciente.usuario.user.first_name }} {{ paciente.usuario.user.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputEspecialidad">Especialidad</label>
-                    <select id="inputEspecialidad" class="form-control select2" name="txtEspecialidad">
-                            <option value="">Seleccionar</option>
-                        {% for especialidad in especialidades %}
-                            <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputMedico">Médico</label>
-                    <select id="inputMedico" class="form-control select2" name="txtMedico">
-                            <option value="">Seleccionar</option>
-                        {% for medico in medicos %}
-                            <option value="{{ medico.id }}">{{ medico.usuario.user.first_name }} {{ medico.usuario.user.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputMotivo">Motivo</label>
-                    <select id="inputMotivo" class="form-control select2" name="txtMotivo" required>
-                      <option selected>Seleccionar</option>
-                      <option>Sesión de tratamiento</option>
-                      <option>Consulta</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputServicio">Servicio</label required>
-                    <select id="inputServicio" class="form-control select2" name="txtServicio">
-                            <option value="">Seleccionar</option>
-                        {% for servicio in servicios %}
-                            <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
-                        {% endfor %}
+                    <label for="eventType">Paciente</label>
+                    <select id="eventPaciente" class="form-control select2" name="txtPaciente" required>
+                      <option value="">Seleccionar</option>
+                      {% for paciente in pacientes %}
+                      <option value="{{ paciente.id }}">{{ paciente }}</option>
+                      {% endfor %}
                     </select>
                   </div>
 
                   <div class="form-group col-md-6">
-                    <label for="date-input1">Fecha</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
-                      </div>
-                      <input type="text" class="form-control drgpicker" id="drgpicker-start" name="txtFecha">
-                    </div>
+                    <label for="eventType">Especialidad</label>
+                    <select id="eventEspecialidad" class="form-control select2" name="txtEspecialidad" required>
+                      {% for especialidad in especialidades %}
+                      <option value="{{ especialidad.id }}">{{ especialidad }}</option>
+                      {% endfor %}
+                    </select>
                   </div>
+
                   <div class="form-group col-md-6">
-                    <label for="startDate">Hora</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text" id="button-addon-time"><span class="fe fe-clock fe-16"></span></div>
-                      </div>
-                      <input type="text" class="form-control time-input" id="start-time" name="txtHora">
-                    </div>
-                  </div>
-                  <!--<div class="form-group col-md-6">
-                    <label for="eventType">Frecuencia</label>
-                    <select id="eventFrecuencia" class="form-control select2">
-                      <option value="Luneas a sabado">Luneas a sabado</option>
+                    <label for="eventType">Médico</label>
+                    <select id="eventMedico" class="form-control select2" name="txtMedico" required>
+                      {% for medico in medicos %}
+                      <option value="{{ medico.id }}">{{ medico }}</option>
+                      {% endfor %}
                     </select>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="date-input1">Válido hasta</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
-                      </div>
-                      <input type="text" class="form-control drgpicker" id="drgpicker-start" value="08/24/2020">
-                    </div>
-                  </div> -->
+                    <label for="eventType">Motivo</label>
+                    <select id="eventMotivo" class="form-control select2" name="txtMotivo" required>
+                      <option value="Sesion de tratamiento">Sesion de tratamiento</option>
+                      <option value="Consulta">Consulta</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="eventType">Servicio</label>
+                    <select id="eventServicio" class="form-control select2" name="txtServicio" required>
+                      {% for servicio in servicios %}
+                      <option value="{{ servicio.id }}">{{ servicio }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputFch">Fecha</label>
+                    <input type="date" class="form-control" id="inputFch" name="txtFecha" required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="example-time">Hora</label>
+                    <input class="form-control" id="example-time" type="time" name="txtHora" required>
+                  </div>
+                  
                   <div class="form-group col-md-6">
                     <label for="eventType">Duración</label>
-                    <select id="eventDuracion" class="form-control select2" name="txtDuracion">
-                      <option>Seleccionar</option>
-                      <option value="30 minutos">30 minutos</option>
+                    <select id="eventDuracion" class="form-control select2" name="txtDuracion" required>
                       <option value="45 minutos">45 minutos</option>
                     </select>
                   </div>
-              
-                </div> 
+                </div>
                 <div class="modal-footer d-flex justify-content-between">
-                  <!--<div class="custom-control custom-switch">
+                  <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
-                    <label class="custom-control-label" for="RepeatSwitch">Activo</label>
-                  </div> -->
+                    <label class="custom-control-label" for="RepeatSwitch">Todo el día</label>
+                  </div>
                   <div>
                     <button type="submit" class="btn btn-primary mr-4">Guardar</button>
-                    <a href="{% url 'tabla_citas' %}" class="btn btn-danger">Cancelar</a>
+                    <a href="{% url 'calendar' %}" class="btn btn-danger">Cancelar</a>
                   </div>
                 </div>
               </form>
             </div>
+
+            
           </div>
         </div>
       </div> <!-- new event modal -->
@@ -240,5 +210,6 @@
         // do something...
       })
     </script>
+    
 
 {% endblock %}

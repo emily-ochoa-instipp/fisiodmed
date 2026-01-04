@@ -7,25 +7,18 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <h2 class="page-title">Editar médico</h2>
+              <h2 class="page-title">Editar cita</h2>
               <div class="card-deck">
                 <div class="card shadow mb-4">
                   <div class="card-body">
                     <form method="post" action="">
-                      {% csrf_token %}
-                      {% if error is not None %}
-                          <div class="alert alert-danger" role="alert">
-                          {{ error }}
-                          </div>
-                      {% endif %}
                       <div class="form-row">
-  
                         <div class="form-group col-md-6">
                           <label for="inputPaciente">Paciente</label required>
                           <select id="inputPaciente" class="form-control select2" name="txtPaciente">
                                   <option value="">Seleccionar</option>
                               {% for paciente in pacientes %}
-                                  <option value="{{ paciente.id }}" {% if cita.paciente and cita.paciente.id == paciente.id %}selected{% endif %}>{{ paciente.usuario.user.first_name }} {{ paciente.usuario.user.last_name }}</option>
+                                  <option value="{{ paciente.id }}" {% if cita.paciente and cita.paciente.id == paciente.id %}selected{% endif %}>{{ paciente.nombres }} {{ paciente.apellidos }}</option>
                               {% endfor %}
                           </select>
                         </div>
@@ -100,7 +93,7 @@
                         <div>
                           <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                         <!--<button type="submit" class="btn btn-danger">Cancelar</button>-->
-                          <a href="{% url 'tabla_medicos' %}" class="btn btn-danger">Cancelar</a>
+                          <a href="{% url 'tabla_citas' %}" class="btn btn-danger">Cancelar</a>
                         </div>
                       </div>
                     </form>
