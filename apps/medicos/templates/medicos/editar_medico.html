@@ -12,12 +12,7 @@
                 <div class="card shadow mb-4">
                   <div class="card-body">
                     <form method="post" action="">
-                      {% csrf_token %}
-                      {% if error is not None %}
-                          <div class="alert alert-danger" role="alert">
-                          {{ error }}
-                          </div>
-                      {% endif %}
+        
                       <div class="form-row">
   
                         <div class="form-group col-md-6">

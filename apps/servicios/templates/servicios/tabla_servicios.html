@@ -8,10 +8,13 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de servicios</h2>
-              {% if error is not None %}
-                  <div class="alert alert-danger" role="alert">
-                  {{ error }}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                   </div>
+                {% endfor %}
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
@@ -43,9 +46,9 @@
                             <td>{{ servicio.id }}</td>
                             <td>{{ servicio.nombre }}</td>
                             <td>{{ servicio.especialidad.nombre }}</td>
-                            <td>{{ servicio.sesiones }}</td>
+                            <td>{{ servicio.sesiones|default:"No aplica" }}</td>
                             <td>{{ servicio.duracion }}</td>
-                            <td>{{ servicio.costo }}</td>                  
+                            <td>${{ servicio.costo }}</td>                  
 
                             <td>
                               {% if request.user|has_group:"Administrador" %}
@@ -106,11 +109,7 @@
             <div class="modal-body p-4">
               <form method="post" action="{% url 'registrar_servicio' %}">
                 {% csrf_token %}
-                {% if error is not None %}
-                    <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                    </div>
-                {% endif %}
+    
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="inputNombreServicio">Nombre del servicio</label>
@@ -131,7 +130,7 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label for="inputDuracionServicio">Duración estimada</label>
-                    <select id="inputDuracionServicio" class="form-control" name="txtDuracion" required>
+                    <select id="inputDuracionServicio" class="form-control select2" name="txtDuracion" required>
                       <option selected>Seleccionar duración</option>
                       <option>30 minutos</option>
                       <option>45 minutos</option>
@@ -142,17 +141,10 @@
                     <input type="number" class="form-control" id="inputCostoServicio" placeholder="Costo" name="txtCosto">
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="inputDescripcionServicio">Descripción</label>
-                    <input type="text" class="form-control" id="inputDescripcionServicio" placeholder="Descripción" name="txtDescripcion">
+                    <label for="inputDescripcion">Descripción</label>
+                    <textarea class="form-control" id="inputDescripcion" name="txtDescripcion" rows="4" required></textarea>
                   </div>
-                  <div class="form-group col-md-6">
-                    <label for="inputEstado">Estado</label>
-                    <select id="inputEstado" class="form-control">
-                      <option selected>Seleccionar estado</option>
-                      <option>Activo</option>
-                      <option>Inactivo</option>
-                    </select>
-                  </div>
+                  
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                   <div class="custom-control custom-switch">

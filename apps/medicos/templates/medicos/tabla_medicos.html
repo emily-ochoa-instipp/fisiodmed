@@ -8,10 +8,13 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de médicos</h2>
-              {% if error is not None %}
-                  <div class="alert alert-danger" role="alert">
-                  {{ error }}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                   </div>
+                {% endfor %}
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
@@ -111,11 +114,6 @@
             <div class="modal-body p-4">
               <form method="post" action="{% url 'registrar_medico' %}">
                 {% csrf_token %}
-                {% if error is not None %}
-                    <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                    </div>
-                {% endif %}
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="inputNombres">Nombres</label>
@@ -128,6 +126,7 @@
                   <div class="form-group col-md-6">
                     <label for="inputEspecialidad">Especialidad</label required>
                     <select id="inputEspecialidad" class="form-control select2" name="txtEspecialidad">
+                            <option selected>Seleccionar especialidad</option>
                         {% for especialidad in especialidades %}
                             <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
                         {% endfor %}

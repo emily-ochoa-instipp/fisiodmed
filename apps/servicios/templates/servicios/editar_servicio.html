@@ -12,12 +12,7 @@
                 <div class="card shadow mb-4">
                   <div class="card-body">
                     <form method="post" action="">
-                      {% csrf_token %}
-                      {% if error is not None %}
-                          <div class="alert alert-danger" role="alert">
-                          {{ error }}
-                          </div>
-                      {% endif %}
+          
                       <div class="form-row">
                         <div class="form-group col-md-6">
                           <label for="inputNombreServicio">Nombre del servicio</label>
@@ -33,12 +28,12 @@
                           </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputSesionesServicio">Sesiones</label>
-                            <input type="number" class="form-control" id="inputSesionesServicio" placeholder="Número de sesiones" name="txtSesiones" value="{{ servicio.sesiones }}" min="0">
+                            <label for="inputSesionesServicio">Sesiones (si aplica)</label>
+                            <input type="number" class="form-control" id="inputSesionesServicio" placeholder="Número de sesiones" name="txtSesiones" value="{{ servicio.sesiones|default:"No aplica" }}" min="0">
                         </div>
                         <div class="form-group col-md-6">
                           <label for="inputDuracionServicio">Duración estimada</label>
-                          <select id="inputDuracionServicio" class="form-control" name="txtDuracion">
+                          <select id="inputDuracionServicio" class="form-control select2" name="txtDuracion">
                             <option selected>Seleccionar duración</option>
                             <option value="30 minutos" {% if servicio.duracion == '30 minutos' %}selected{% endif %}>30 minutos</option>
                             <option value="45 minutos" {% if servicio.duracion == '30 minutos' %}selected{% endif %}>45 minutos</option>
@@ -49,17 +44,10 @@
                           <input type="number" class="form-control" id="inputCostoServicio" placeholder="Costo" name="txtCosto" value="{{ servicio.costo }}">
                         </div>
                         <div class="form-group col-md-6">
-                          <label for="inputDescripcionServicio">Descripción</label>
-                          <input type="text" class="form-control" id="inputDescripcionServicio" placeholder="Descripción" name="txtDescripcion" value="{{ servicio.descripcion }}">
+                          <label for="inputDescripcion">Descripción</label>
+                          <textarea class="form-control" id="inputDescripcion" name="txtDescripcion" rows="4" required>{{ servicio.descripcion }}</textarea>
                         </div>
-                        <div class="form-group col-md-6">
-                          <label for="inputEstado">Estado</label>
-                          <select id="inputEstado" class="form-control">
-                            <option selected>Seleccionar estado</option>
-                            <option>Activo</option>
-                            <option>Inactivo</option>
-                          </select>
-                        </div>
+                        
                         <div class="form-group col-md-6"></div>
                       </div>
 
