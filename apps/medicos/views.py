@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.medicos.models import Medico
 from apps.especialidades.models import Especialidad
 from apps.usuarios.models import Usuario
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from apps.usuarios.decorators import roles_permitidos
+from django.contrib import messages
+
 
 
 # Create your views here.
@@ -30,70 +32,102 @@ def registrar_medico(request):
         email = request.POST['txtEmail']
         direccion = request.POST['txtDireccion']
 
-        especialidad_obj = Especialidad.objects.get(id=especialidad_id)
+        #  VALIDACIONES 
+        if User.objects.filter(username=num_doc).exists():
+            messages.error(request, 'Ya existe un usuario con ese número de documento.')
+            return redirect('tabla_medicos')
+
+        if Usuario.objects.filter(num_doc=num_doc).exists():
+            messages.error(request, 'Ese número de documento ya está registrado.')
+            return redirect('tabla_medicos')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Ese correo ya está registrado.')
+            return redirect('tabla_medicos')
+
+        especialidad = Especialidad.objects.get(id=especialidad_id)
     
         #user
-        userCreate = User.objects.create_user(
+        user = User.objects.create_user(
             first_name=nombres,
             last_name=apellidos,
             username=num_doc, 
             email=email,
-            password='12345' 
+            password=num_doc, 
         )
+        
+        # ASIGNAR GRUPO MEDICO
+        grupo_medico = Group.objects.get(name='Medico')
+        user.groups.add(grupo_medico)
 
-        # Usuario 
-        usuarioCreate = Usuario.objects.create(
-            user=userCreate,
-            rol='Medico',
-            telefono=telefono,
-            num_doc=num_doc,
-        )
-
+        # 3️Obtener Usuario creado por signal
+        usuario = user.usuario
+        usuario.telefono = telefono
+        usuario.num_doc = num_doc
+        usuario.save()
+        
         # médico 
         Medico.objects.create(
-            usuario=usuarioCreate,
-            especialidad=especialidad_obj,
+            usuario=usuario,
+            especialidad=especialidad,
             direccion=direccion
         )
-
+        messages.success(request, 'Medico registrado correctamente.')
         return redirect('tabla_medicos')
-    return render(request, 'medicos/tabla_medicos.html')
+    return redirect('tabla_medicos')
 
 @login_required
 @user_passes_test(roles_permitidos(['Administrador']))
 def editar_medico(request, medico_id):
-    medico = Medico.objects.get(id=medico_id)
+    medico = get_object_or_404(Medico, id=medico_id)
     especialidades = Especialidad.objects.all()
 
     if request.method == 'POST':
         usuario = medico.usuario
         user = usuario.user
 
+        nombres = request.POST['txtNombres']
+        apellidos = request.POST['txtApellidos']
+        email = request.POST['txtEmail']
+        num_doc = request.POST['txtNumDoc']
+        telefono = request.POST['txtTelefono']
+        direccion = request.POST['txtDireccion']
+        especialidad_id = request.POST['txtEspecialidad']
+
+        #  VALIDACIONES
+        if User.objects.filter(username=num_doc).exclude(id=user.id).exists():
+            messages.error(request, 'Ese número de documento ya está en uso.')
+            return redirect('tabla_medicos')
+
+        if User.objects.filter(email=email).exclude(id=user.id).exists():
+            messages.error(request, 'Ese correo ya está en uso.')
+            return redirect('tabla_medicos')
+
         # user
-        user.first_name = request.POST['txtNombres']
-        user.last_name = request.POST['txtApellidos']
-        user.email = request.POST['txtEmail']
+        user.first_name = nombres
+        user.last_name = apellidos
+        user.email = email
+        user.username = num_doc
         user.save()
 
         # usuario
-        usuario.num_doc = request.POST['txtNumDoc']
-        usuario.telefono = request.POST['txtTelefono']
+        usuario.num_doc = num_doc
+        usuario.telefono = telefono
         usuario.save()
 
         # medico
-        #medico.num_doc = request.POST.get('txtNumDoc') or None
-        medico.direccion = request.POST.get('txtDireccion') or None
-        especialidad_id = request.POST.get('txtEspecialidad')
-        if especialidad_id:
-            medico.especialidad = Especialidad.objects.get(id=especialidad_id)
-        else:
-            medico.especialidad = None
+        medico.direccion = direccion
+        medico.especialidad = Especialidad.objects.get(id=especialidad_id)
         medico.save()
-        
 
+        messages.success(request, 'Médico actualizado correctamente.')
         return redirect('tabla_medicos')
 
-    return render(request, 'medicos/editar_medico.html', {'medico': medico, 'especialidades': especialidades})
+    return render(request, 'medicos/editar_medico.html', {
+        'medico': medico,
+        'especialidades': especialidades
+    })
+
 
 @login_required
 @user_passes_test(roles_permitidos(['Administrador']))
@@ -105,6 +139,6 @@ def eliminar_medico(request, medico_id):
     medico.delete()  
     usuario.delete() 
     user.delete()  
-    
+    messages.success(request, 'Medico eliminado correctamente.')
     return redirect('tabla_medicos')
 

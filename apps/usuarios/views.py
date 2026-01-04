@@ -37,17 +37,18 @@ def registrar_usuario(request):
             telefono_ = request.POST.get('txtTelefono')
 
             # Verificar duplicados
-            users = User.objects.filter(Q(username__iexact=username_) | Q(email__iexact=email_))
-            usuarios = Usuario.objects.filter(Q(num_doc__iexact=num_doc_))
+            if User.objects.filter(username__iexact=username_).exists():
+                messages.error(request, 'El nombre de usuario ya existe.')
+                return redirect('tabla_usuarios')
 
-            if users.exists() or usuarios.exists():
-                return render(request, 'usuarios/tabla_usuarios.html', {
-                    'usuarios': Usuario.objects.all(),
-                    'roles': Group.objects.all(),
-                    'error': 'Ya existe un usuario con ese nombre de usuario, email o cédula',
-                })
+            if User.objects.filter(email__iexact=email_).exists():
+                messages.error(request, 'El correo electrónico ya está registrado.')
+                return redirect('tabla_usuarios')
+
+            if Usuario.objects.filter(num_doc__iexact=num_doc_).exists():
+                messages.error(request, 'El número de documento ya está registrada.')
+                return redirect('tabla_usuarios')
             
-
             # Crear el usuario base
             user = User.objects.create_user(
                 first_name=first_name_,
@@ -69,7 +70,7 @@ def registrar_usuario(request):
             usuario.telefono = telefono_
             usuario.num_doc = num_doc_
             usuario.save()
-
+            messages.success(request, 'Usuario registrado correctamente.')
             return redirect('tabla_usuarios')
     
     return redirect('tabla_usuarios')
@@ -101,7 +102,7 @@ def editar_usuario(request, usuario_id):
 
         usuario.user.save()
         usuario.save()
-        
+        messages.success(request, 'Usuario actualizado correctamente.')    
         return redirect('tabla_usuarios')
     roles = Group.objects.all()
     return render(request, 'usuarios/editar_usuario.html', {'usuario': usuario, 'roles': roles})
@@ -113,6 +114,7 @@ def eliminar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
     user = usuario.user
     user.delete()
+    messages.success(request, 'Usuario eliminado correctamente.')
     return redirect('tabla_usuarios')
 
 @login_required
