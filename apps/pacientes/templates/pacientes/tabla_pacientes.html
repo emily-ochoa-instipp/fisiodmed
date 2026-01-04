@@ -8,6 +8,15 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Listado de pacientes</h2>
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
                 {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
@@ -38,13 +47,13 @@
                           {% for paciente in pacientes %}
                           <tr>
                             <td>{{ paciente.id }}</td>
-                            <td>{{ paciente.usuario.user.first_name }}</td>
-                            <td>{{ paciente.usuario.user.last_name }}</td>
+                            <td>{{ paciente.nombres }}</td>
+                            <td>{{ paciente.apellidos }}</td>
                             <td>{{ paciente.edad }}</td>
                             <td>{{ paciente.sexo }}</td>
-                            <td>{{ paciente.usuario.num_doc }}</td>
-                            <td>{{ paciente.usuario.telefono }}</td>
-                            <td>{{ paciente.usuario.user.email }}</td>
+                            <td>{{ paciente.num_doc }}</td>
+                            <td>{{ paciente.telefono }}</td>
+                            <td>{{ paciente.email }}</td>
                             <td>{{ paciente.direccion }}</td>
 
                             <td>
@@ -107,11 +116,7 @@
             <div class="modal-body p-4">
               <form method="post" action="{% url 'registrar_paciente' %}">
                 {% csrf_token %}
-                {% if error is not None %}
-                    <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                    </div>
-                {% endif %}
+
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="inputNombres">Nombres</label>
@@ -131,7 +136,7 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label for="inputSexo">Sexo</label required>
-                    <select id="inputSexo" class="form-control" name="txtSexo">
+                    <select id="inputSexo" class="form-control select2" name="txtSexo">
                       <option selected>Seleccionar sexo</option required>
                       <option>Femenino</option>
                       <option>Masculino</option>
@@ -140,7 +145,7 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label for="inputTipoSangre">Tipo de sangre</label>
-                    <select id="inputTipoSangre" class="form-control" name="txtTipoSangre" required>
+                    <select id="inputTipoSangre" class="form-control select2" name="txtTipoSangre" required>
                       <option selected>Seleccionar tipo de sangre</option>
                       <option>A+</option>
                       <option>B+</option>
@@ -148,15 +153,6 @@
                       <option>O+</option>
                     </select>
                   </div>
-                  <!--<div class="form-group col-md-6">
-                    <label for="inputTipoDoc">Tipo documento</label>
-                    <select id="inputTipoDoc" class="form-control" name="txtTipoDoc" required>
-                      <option selected>Seleccionar tipo</option>
-                      <option>Cédula</option>
-                      <option>Pasaporte</option>
-                      <option>Otro</option>
-                    </select>
-                  </div> -->
                   <div class="form-group col-md-6">
                     <label for="inputNumDoc">Número documento</label>
                     <input type="number" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" required>
@@ -175,7 +171,7 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label for="inputEstadoCivil">Estado civil</label>
-                    <select id="inputEstadoCivil" class="form-control" name="txtEstadoCivil" required>
+                    <select id="inputEstadoCivil" class="form-control select2" name="txtEstadoCivil" required>
                       <option selected>Seleccionar estado civil</option>
                       <option>Casad@</option>
                       <option>Solter@</option>

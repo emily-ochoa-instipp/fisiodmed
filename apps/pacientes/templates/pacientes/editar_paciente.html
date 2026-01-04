@@ -28,20 +28,15 @@
                       <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="historialMedico" role="tabpanel" aria-labelledby="historialMedico-tab"> 
                           <form method="post" action="">
-                          {% csrf_token %}
-                          {% if error is not None %}
-                              <div class="alert alert-danger" role="alert">
-                              {{ error }}
-                              </div>
-                          {% endif %}
+                  
                             <div class="form-row">
                               <div class="form-group col-md-6">
                                 <label for="inputNombres">Nombres</label>
-                                <input type="text" class="form-control" id="inputNombres" placeholder="Nombres" name="txtNombres" value="{{ paciente.usuario.user.first_name }}">
+                                <input type="text" class="form-control" id="inputNombres" placeholder="Nombres" name="txtNombres" value="{{ paciente.nombres }}">
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputApellidos">Apellidos</label>
-                                <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos" name="txtApellidos" value="{{ paciente.usuario.user.last_name }}">
+                                <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos" name="txtApellidos" value="{{ paciente.apellidos }}">
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputFchNac">Fecha de nacimiento</label>
@@ -53,7 +48,7 @@
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputSexo">Sexo</label>
-                                <select id="inputSexo" class="form-control" name="txtSexo">
+                                <select id="inputSexo" class="form-control select2" name="txtSexo">
                                   <option selected>Seleccionar sexo</option>
                                   <option value="Femenino" {% if paciente.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
                                   <option value="Masculino" {% if paciente.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
@@ -62,7 +57,7 @@
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputTipoSangre">Tipo de sangre</label>
-                                <select id="inputTipoSangre" class="form-control" name="txtTipoSangre">
+                                <select id="inputTipoSangre" class="form-control select2" name="txtTipoSangre">
                                   <option selected>Seleccionar tipo de sangre</option>
                                   <option value="A+" {% if paciente.tipo_sangre == 'A+' %}selected{% endif %}>A+</option>
                                   <option value="B+" {% if paciente.tipo_sangre == 'B+' %}selected{% endif %}>B+</option>
@@ -70,27 +65,18 @@
                                   <option value="O+" {% if paciente.tipo_sangre == 'O+' %}selected{% endif %}>O+</option>
                                 </select>
                               </div>
-                              <!--<div class="form-group col-md-6">
-                                <label for="inputTipoDoc">Tipo documento</label>
-                                <select id="inputTipoDoc" class="form-control">
-                                  <option selected>Seleccionar tipo</option>
-                                  <option>Cédula</option>
-                                  <option>Pasaporte</option>
-                                  <option>Otro</option>
-                                </select>
-                              </div>-->
                               <div class="form-group col-md-6">
                                 <label for="inputNumDoc">Número documento</label>
-                                <input type="number" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" value="{{ paciente.usuario.num_doc }}">
+                                <input type="number" class="form-control" id="inputNumDoc" placeholder="Número de documento" name="txtNumDoc" value="{{ paciente.num_doc }}">
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputNumTelf">Número teléfono</label>
-                                <input type="number" class="form-control" id="inputNumTelf" placeholder="Número de teléfono" name="txtTelefono" value="{{ paciente.usuario.telefono }}">
+                                <input type="number" class="form-control" id="inputNumTelf" placeholder="Número de teléfono" name="txtTelefono" value="{{ paciente.telefono }}">
                               </div>
 
                               <div class="form-group col-md-6">
                                 <label for="inputEmail">Email</label>
-                                <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="txtEmail" value="{{ paciente.usuario.user.email }}">
+                                <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="txtEmail" value="{{ paciente.email }}">
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputDireccion">Dirección</label>
@@ -98,7 +84,7 @@
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="inputEstadoCivil">Estado civil</label>
-                                <select id="inputEstadoCivil" class="form-control" name="txtEstadoCivil">
+                                <select id="inputEstadoCivil" class="form-control select2" name="txtEstadoCivil">
                                   <option selected>Seleccionar estado civil</option>
                                   <option value="Casad@" {% if paciente.estado_civil == 'Casad@' %}selected{% endif %}>Casad@</option>
                                   <option value="Solter@" {% if paciente.estado_civil == 'Solter@' %}selected{% endif %}>Solter@</option>
