@@ -14,9 +14,7 @@ class Cita(models.Model):
     motivo = models.CharField(max_length=200, null=True,  blank=True)
     servicio = models.ForeignKey('servicios.Servicio', on_delete=models.SET_NULL, null=True)
     fecha = models.DateField()
-    hora = models.TimeField()
-    #frecuencia = models.CharField(max_length=100, blank=True, null=True)  
-    #valido_hasta = models.DateField(blank=True, null=True, verbose_name='Válido hasta')
+    hora= models.TimeField()
     duracion = models.CharField(max_length=30, null=True,  blank=True)
 
     def __str__(self):
