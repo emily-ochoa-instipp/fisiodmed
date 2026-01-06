@@ -1,59 +1,39 @@
-/* css/fisiomed-login.css */
 
-/* Estilo para el cuerpo de la página: Fondo de color Fisiomed */
+
 body.light {
-    background-color: #2F8B8C !important; /* Asegura que el color de fondo de Fisiomed se aplique */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Para centrar verticalmente */
     margin: 0;
-    font-family: 'Overpass', sans-serif; /* Usa la fuente de tu plantilla */
-}
-
-/* Oculta la navegación superior y la barra lateral si el login no debe tenerlas */
-.topnav, .sidebar-left {
-    display: none !important;
-}
-
-/* Ajustes para el wrapper para centrar el contenido */
-.wrapper.vh-100 {
+    background-color: #007f8b!important;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
     height: 100vh;
+    font-family: 'Overpass', sans-serif; 
 }
 
-.row.align-items-center.justify-content-center.h-100 {
-    width: 100%;
-    height: 100%;
-}
-
-/* Contenedor principal del formulario de login Fisiomed (caja blanca con sombra) */
-.fisiomed-login-container {
-    background-color: #fff;
-    padding: 40px; /* Ajusta el padding para que sea un poco más grande */
-    border-radius: 8px; /* Bordes ligeramente redondeados */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada y suave */
+.login-container {
+    background-color: #f9f9f9;
+    padding: 40px;
+    border-radius: 10px;
+    width: 360px;
     text-align: center;
-    width: 100%;
-    max-width: 400px; /* Ajusta el ancho del contenedor */
-    box-sizing: border-box; /* Asegura que padding no aumente el width */
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    display: block;
 }
 
-/* Estilo para el logo de Fisiomed */
-.fisiomed-logo {
-    max-width: 180px; /* Tamaño del logo */
-    height: auto;
-    display: block; /* Para centrarlo con margin auto */
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 30px; /* Espacio debajo del logo */
+.logo {
+    margin-bottom: 20px;
 }
+  
+.logo img {
+    width: 100%;
+    width: 360px;
+    border-radius: 10px;
+}
+
 
 /* Estilos para los títulos y subtítulos */
-.fisiomed-login-container h1 {
+.login-container h1 {
     font-size: 26px; /* Tamaño de la fuente del título */
     color: #333;
     margin-bottom: 8px; /* Espacio debajo del título */
@@ -61,7 +41,7 @@ body.light {
     font-weight: 700; /* Negrita */
 }
 
-.fisiomed-login-container p {
+.login-container p {
     font-size: 15px; /* Tamaño de la fuente del subtítulo */
     color: #666;
     margin-bottom: 30px; /* Espacio debajo del subtítulo */
