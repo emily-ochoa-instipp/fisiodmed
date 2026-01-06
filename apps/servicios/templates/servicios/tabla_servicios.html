@@ -37,7 +37,7 @@
                             <th>Sesiones</th>
                             <th>Duración</th>
                             <th>Costo</th>
-                            <th>Action</th>
+                            <th>Acción</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -118,7 +118,7 @@
                   <div class="form-group col-md-6">
                     <label for="inputEspecialidadServicio">Especialidad</label>
                     <select id="inputEspecialidadServicio" class="form-control select2" name="txtEspecialidad" required>
-                      <option selected>Seleccionar especialidad</option>
+                      <option selected>Seleccionar</option>
                       {% for especialidad in especialidades %}
                       <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
                     {% endfor %}
@@ -131,7 +131,7 @@
                   <div class="form-group col-md-6">
                     <label for="inputDuracionServicio">Duración estimada</label>
                     <select id="inputDuracionServicio" class="form-control select2" name="txtDuracion" required>
-                      <option selected>Seleccionar duración</option>
+                      <option selected>Seleccionar</option>
                       <option>30 minutos</option>
                       <option>45 minutos</option>
                     </select>

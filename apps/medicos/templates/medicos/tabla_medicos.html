@@ -38,7 +38,7 @@
                             <th>Teléfono</th>
                             <th>Correo</th>
                             <th>Dirección</th>
-                            <th>Action</th>
+                            <th>Acción</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -126,7 +126,7 @@
                   <div class="form-group col-md-6">
                     <label for="inputEspecialidad">Especialidad</label required>
                     <select id="inputEspecialidad" class="form-control select2" name="txtEspecialidad">
-                            <option selected>Seleccionar especialidad</option>
+                            <option selected>Seleccionar</option>
                         {% for especialidad in especialidades %}
                             <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
                         {% endfor %}

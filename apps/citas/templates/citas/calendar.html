@@ -34,6 +34,7 @@
                           <div class="form-group col-md-6">
                             <label for="eventType">Paciente</label>
                             <select id="eventPaciente" class="form-control select2" name="txtPaciente" required>
+                              <option value="">Seleccionar</option>
                               {% for paciente in pacientes %}
                               <option value="{{ paciente.id }}">{{ paciente }}</option>
                               {% endfor %}
@@ -43,6 +44,7 @@
                           <div class="form-group col-md-6">
                             <label for="eventType">Especialidad</label>
                             <select id="eventEspecialidad" class="form-control select2" name="txtEspecialidad" required>
+                              <option value="">Seleccionar</option>
                               {% for especialidad in especialidades %}
                               <option value="{{ especialidad.id }}">{{ especialidad }}</option>
                               {% endfor %}
@@ -52,6 +54,7 @@
                           <div class="form-group col-md-6">
                             <label for="eventType">Médico</label>
                             <select id="eventMedico" class="form-control select2" name="txtMedico" required>
+                              <option value="">Seleccionar</option>
                               {% for medico in medicos %}
                               <option value="{{ medico.id }}">{{ medico }}</option>
                               {% endfor %}
@@ -60,6 +63,7 @@
                           <div class="form-group col-md-6">
                             <label for="eventType">Motivo</label>
                             <select id="eventMotivo" class="form-control select2" name="txtMotivo" required>
+                              <option value="">Seleccionar</option>
                               <option value="Sesion de tratamiento">Sesion de tratamiento</option>
                               <option value="Consulta">Consulta</option>
                             </select>
@@ -67,6 +71,7 @@
                           <div class="form-group col-md-6">
                             <label for="eventType">Servicio</label>
                             <select id="eventServicio" class="form-control select2" name="txtServicio" required>
+                              <option value="">Seleccionar</option>
                               {% for servicio in servicios %}
                               <option value="{{ servicio.id }}">{{ servicio }}</option>
                               {% endfor %}
@@ -84,6 +89,7 @@
                           <div class="form-group col-md-6">
                             <label for="eventType">Duración</label>
                             <select id="eventDuracion" class="form-control select2" name="txtDuracion" required>
+                              <option value="">Seleccionar</option>
                               <option value="45 minutos">45 minutos</option>
                             </select>
                           </div>
