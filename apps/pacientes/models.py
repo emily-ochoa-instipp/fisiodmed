@@ -18,4 +18,23 @@ class Paciente(models.Model):
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
+    
+
+class Antecedentes(models.Model):
+    paciente = models.OneToOneField(Paciente,on_delete=models.CASCADE,related_name='antecedentes')
+
+    # Antecedentes personales
+    personales_patologicos = models.TextField("Antecedentes Personales Patológicos",null=True,blank=True)
+    personales_no_patologicos = models.TextField("Antecedentes Personales No Patológicos", null=True,blank=True)
+    # Familiares
+    heredofamiliares = models.TextField( "Antecedentes Heredofamiliares",null=True,blank=True)
+    # Según sexo
+    gineco_andrologicos = models.TextField("Antecedentes Ginecoobstétricos / Andrológicos",null=True,blank=True)
+    # Otros
+    otros = models.TextField("Otros antecedentes",null=True,blank=True)
+
+    def __str__(self):
+        return f"Antecedentes de {self.paciente}"
+
+
 

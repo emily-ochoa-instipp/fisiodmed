@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.pacientes.models import Paciente
+from apps.antecedentes.models import Antecedentes
 from datetime import date
 from django.contrib import messages
 from apps.usuarios.decorators import roles_permitidos
