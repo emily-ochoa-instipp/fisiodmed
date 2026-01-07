@@ -13,7 +13,8 @@
                   <h2 class="page-title">Calendario</h2>
                 </div>
                 <div class="col-auto">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal"><span class="fe fe-plus fe-16 mr-3"></span>Crear cita</button>
+                  <a href="{% url 'tabla_citas' %}" class="btn btn-primary mr-3">Listar citas</a>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Crear cita +</button>
                 </div>
               </div>
               <div id='calendar'></div>

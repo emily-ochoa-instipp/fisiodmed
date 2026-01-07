@@ -19,7 +19,8 @@
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
                 {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
+                  <a href="{% url 'calendar' %}" class="btn btn-primary mr-2">Ver calendario</a>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Crear cita +</button>
                 {% endif %}
                 </div>
                 <!-- Small table -->
@@ -32,13 +33,12 @@
                           <tr>
                             <th>#</th>
                             <th>Paciente</th>
-                            <th>Especialidad</th>
                             <th>Médico</th>
-                            <th>Motivo</th>
                             <th>Servicio</th>
                             <th>Fecha</th>
                             <th>Hora</th>
-                            <th>Duración</th>
+                            <th>Estado</th>
+                            <th>Pago</th>
                             <th>Acción</th>
                           </tr>
                         </thead>
@@ -47,25 +47,39 @@
                           <tr>
                             <td>{{ cita.id }}</td>
                             <td>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</td>
-                            <td>{{ cita.especialidad.nombre }}</td>
-                            <td>{{ cita.medico.usuario.user.first_name }} {{ cita.medico.usuario.user.last_name }}</td>
-                            <td>{{ cita.motivo }}</td>
+                            <td>{{ cita.medico }}</td>
                             <td>{{ cita.servicio.nombre }}</td>
                             <td>{{ cita.fecha }}</td>
                             <td>{{ cita.hora }}</td>
-                            <td>{{ cita.duracion }}</td>
+                            <td>
+                              <span class="badge badge-info">{{ cita.estado_cita }}</span>
+                            </td>
+                            <td>
+                              {% if cita.estado_pago == 'pagado' %}
+                                <span class="badge badge-success">Pagado</span>
+                              {% elif cita.estado_pago == 'parcial' %}
+                                <span class="badge badge-warning">Parcial</span>
+                              {% else %}
+                                <span class="badge badge-danger">Pendiente</span>
+                              {% endif %}
+                            </td>
 
                             <td>
-                              {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}                           
+                              {% if request.user|has_group:"Recepcionista,Administrador" %}                           
                                 <a href="{% url 'editar_cita' cita.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
                               
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ cita.id }}">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#eliminarModal{{ cita.id }}">
                                   <span class="fe fe-trash fe-14 "></span>
                                 </button>
+
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pagoModal{{ cita.id }}">
+                                  <span class="fe fe-credit-card fe-14 "></span>
+                                </button>
+                                
                               {% endif %}
 
-                              <!-- Modal -->
-                                <div class="modal fade" id="exampleModal{{ cita.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ cita.id }}" aria-hidden="true">
+                              <!-- Modal eliminacion -->
+                                <div class="modal fade" id="eliminarModal{{ cita.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ cita.id }}" aria-hidden="true">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
                                       <form method="post" action="{% url 'eliminar_cita' cita.id %}">
@@ -86,6 +100,130 @@
                                     </div>
                                   </div>
                                 </div>
+
+                                <!-- Modal pagp -->
+                                <div class="modal fade" id="eliminarModal{{ cita.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ cita.id }}" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <form method="post" action="{% url 'registrar_pago' cita.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-header">
+                                          <h5 class="modal-title fs-5" id="exampleModalLabel {{ cita.id }}">Confirma</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          ¿Estas seguro de eliminar la cita de {{ cita.paciente.usuario.user.first_name }} {{ cita.paciente.usuario.user.last_name }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                          <a href="{% url 'tabla_citas' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
+                                          <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>-->
+                                          <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </div>
+                                      </form>   
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- new event modal -->
+                                <div class="modal fade" id="eventModal{{ cita.id }}" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel{{ cita.id }}" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="varyModalLabel">Registrar</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body p-4">
+                                        <form method="post" action="{% url 'registrar_pago' cita.id %}">
+                                          {% csrf_token %}
+                                          <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                              <label for="eventType">Paciente</label>
+                                              <select id="eventPaciente" class="form-control select2" name="txtPaciente" required>
+                                                <option value="">Seleccionar</option>
+                                                {% for paciente in pacientes %}
+                                                <option value="{{ paciente.id }}">{{ paciente }}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                              <label for="eventType">Médico</label>
+                                              <select id="eventMedico" class="form-control select2" name="txtMedico" required>
+                                                <option value="">Seleccionar</option>
+                                                {% for medico in medicos %}
+                                                <option value="{{ medico.id }}">{{ medico }}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                            
+                                            <div class="form-group col-md-6">
+                                              <label for="eventType">Servicio</label>
+                                              <select id="eventServicio" class="form-control select2" name="txtServicio" required>
+                                                <option value="">Seleccionar</option>
+                                                {% for servicio in servicios %}
+                                                <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                              <label for="eventType">Motivo</label>
+                                              <select id="eventMotivo" class="form-control select2" name="txtMotivo" required>
+                                                <option value="">Seleccionar</option>
+                                                <option value="Sesion de tratamiento">Sesion de tratamiento</option>
+                                                <option value="Consulta">Consulta</option>
+                                              </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                              <label for="inputFch">Fecha</label>
+                                              <input type="date" class="form-control" id="inputFch" name="txtFecha" required>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                              <label for="example-time">Hora</label>
+                                              <input class="form-control" id="example-time" type="time" name="txtHora" required>
+                                            </div>
+                                            
+                                            <div class="form-group col-md-6">
+                                              <label for="eventType">Duración</label>
+                                              <select id="eventDuracion" class="form-control select2" name="txtDuracion" required>
+                                                <option value="">Seleccionar</option>
+                                                <option value="45 minutos">45 minutos</option>
+                                              </select>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                              <label>Monto</label>
+                                              <input type="number" step="0.01" min="0" name="monto" class="form-control">
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                              <label>Metodo</label>
+                                              <select class="form-control" name="metodo" required>
+                                                <option selected>Seleccionar</option>
+                                                {% for value, label in pago.METODO_PAGO %}
+                                                  <option value="{{ value }}" {% if pago.metodo == value %}selected{% endif %}>{{ label }}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="modal-footer d-flex justify-content-between">
+                                            <div class="custom-control custom-switch">
+                                              <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
+                                              <label class="custom-control-label" for="RepeatSwitch">Todo el día</label>
+                                            </div>
+                                            <div>
+                                              <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                                              <a href="{% url 'tabla_citas' %}" class="btn btn-danger">Cancelar</a>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+
+                                      
+                                    </div>
+                                  </div>
+                                </div> <!-- new event modal -->
 
                             </td>
                           </tr>
@@ -128,21 +266,21 @@
                   </div>
 
                   <div class="form-group col-md-6">
-                    <label for="eventType">Especialidad</label>
-                    <select id="eventEspecialidad" class="form-control select2" name="txtEspecialidad" required>
-                      <option value="">Seleccionar</option>
-                      {% for especialidad in especialidades %}
-                      <option value="{{ especialidad.id }}">{{ especialidad }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-
-                  <div class="form-group col-md-6">
                     <label for="eventType">Médico</label>
                     <select id="eventMedico" class="form-control select2" name="txtMedico" required>
                       <option value="">Seleccionar</option>
                       {% for medico in medicos %}
                       <option value="{{ medico.id }}">{{ medico }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  
+                  <div class="form-group col-md-6">
+                    <label for="eventType">Servicio</label>
+                    <select id="eventServicio" class="form-control select2" name="txtServicio" required>
+                      <option value="">Seleccionar</option>
+                      {% for servicio in servicios %}
+                      <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -152,15 +290,6 @@
                       <option value="">Seleccionar</option>
                       <option value="Sesion de tratamiento">Sesion de tratamiento</option>
                       <option value="Consulta">Consulta</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="eventType">Servicio</label>
-                    <select id="eventServicio" class="form-control select2" name="txtServicio" required>
-                      <option value="">Seleccionar</option>
-                      {% for servicio in servicios %}
-                      <option value="{{ servicio.id }}">{{ servicio }}</option>
-                      {% endfor %}
                     </select>
                   </div>
                   <div class="form-group col-md-6">
@@ -174,11 +303,13 @@
                   
                   <div class="form-group col-md-6">
                     <label for="eventType">Duración</label>
-                    <select id="eventDuracion" class="form-control select2" name="txtDuracion" required>
+                    <select id="eventDuracion" class="form-control select2" name="txtDuracion">
                       <option value="">Seleccionar</option>
                       <option value="45 minutos">45 minutos</option>
                     </select>
                   </div>
+
+      
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                   <div class="custom-control custom-switch">

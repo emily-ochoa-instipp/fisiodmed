@@ -2,15 +2,16 @@
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
-from apps.especialidades.models import Especialidad
 from apps.citas.models import Cita
 from apps.medicos.models import Medico
 from apps.servicios.models import Servicio
 from apps.pacientes.models import Paciente
+from apps.pagos.models import Pago
 from datetime import datetime, date
 from apps.usuarios.decorators import roles_permitidos
 from django.contrib import messages
 from django.http import JsonResponse
+from decimal import Decimal
 
 # Create your views here.
 
@@ -20,7 +21,6 @@ def calendar(request):
     return render(request, 'citas/calendar.html', {
         'pacientes': Paciente.objects.all(),
         'medicos': Medico.objects.all(),
-        'especialidades': Especialidad.objects.all(),
         'servicios': Servicio.objects.all(),
     })
 
@@ -31,15 +31,14 @@ def tabla_citas(request):
     citas = Cita.objects.all()
     pacientes = Paciente.objects.all()
     medicos = Medico.objects.all()
-    especialidades = Especialidad.objects.all()
     servicios = Servicio.objects.all()
 
     return render(request, 'citas/tabla_citas.html', {
         'citas': citas,
         'pacientes': pacientes,
         'medicos': medicos,
-        'especialidades': especialidades,
-        'servicios': servicios
+        'servicios': servicios,
+        'metodos_pago': Pago.METODO_PAGO,
     })
 
 @login_required
@@ -56,15 +55,14 @@ def registrar_cita(request):
             messages.error(request, 'Fecha y hora son obligatorias.')
             return redirect('tabla_citas')
 
-        fecha = datetime.strptime(fecha_str, '%m/%d/%Y').date()
-        hora = datetime.strptime(hora_str, '%I:%M %p').time()
+        fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+        hora = datetime.strptime(hora_str, '%H:%M').time()
 
         if fecha < date.today():
             messages.error(request, 'No se puede registrar una cita en una fecha pasada.')
             return redirect('tabla_citas')
 
         paciente_id = request.POST.get('txtPaciente')
-        especialidad_id = request.POST.get('txtEspecialidad')
         medico_id = request.POST.get('txtMedico')
         servicio_id = request.POST.get('txtServicio')
 
@@ -74,7 +72,6 @@ def registrar_cita(request):
         # VALIDAR FK 
         paciente = Paciente.objects.get(id=paciente_id)
         medico = Medico.objects.get(id=medico_id)
-        especialidad = Especialidad.objects.get(id=especialidad_id)
         servicio = Servicio.objects.get(id=servicio_id)
 
         #  VALIDACIÓN DE CHOQUE 
@@ -84,23 +81,36 @@ def registrar_cita(request):
             messages.error(request,'El médico ya tiene una cita registrada en esa fecha y hora.')
             return redirect('tabla_citas')
 
-        Cita.objects.create(
+        cita = Cita.objects.create(
             paciente=paciente,
             medico=medico,
-            especialidad=especialidad,
             servicio=servicio,
             motivo=motivo,
             fecha=fecha,
             hora=hora,
-            duracion=duracion
+            duracion=duracion,
         )
+
+        # PAGO OPCIONAL
+        monto = request.POST.get('monto')
+        metodo = request.POST.get('metodo')
+
+        if monto:
+            monto = Decimal(monto)
+
+            if monto > 0 and monto <= cita.total_servicio():
+                Pago.objects.create(
+                    cita=cita,
+                    monto=monto,
+                    metodo=metodo
+                )
+                cita.actualizar_estado_pago()
 
         messages.success(request, 'Cita registrada correctamente.')
         return redirect('tabla_citas')
 
     except Paciente.DoesNotExist:messages.error(request, 'Paciente no válido.')
     except Medico.DoesNotExist:messages.error(request, 'Médico no válido.')
-    except Especialidad.DoesNotExist:messages.error(request, 'Especialidad no válida.')
     except Servicio.DoesNotExist:messages.error(request, 'Servicio no válido.')
     except ValueError:messages.error(request, 'Formato de fecha u hora incorrecto.')
     except Exception:messages.error(request, 'Ocurrió un error inesperado al registrar la cita.')
@@ -116,18 +126,13 @@ def editar_cita(request, cita_id):
         try:
             cita.paciente_id = request.POST.get('txtPaciente')
             cita.medico_id = request.POST.get('txtMedico')
-            cita.especialidad_id = request.POST.get('txtEspecialidad')
             cita.servicio_id = request.POST.get('txtServicio')
             cita.motivo = request.POST.get('txtMotivo')
             cita.duracion = request.POST.get('txtDuracion')
 
-            cita.fecha = datetime.strptime(
-                request.POST.get('txtFecha'), '%m/%d/%Y'
-            ).date()
+            cita.fecha = datetime.strptime(request.POST.get('txtFecha'), '%Y-%m-%d').date()
 
-            cita.hora = datetime.strptime(
-                request.POST.get('txtHora'), '%I:%M %p'
-            ).time()
+            cita.hora = datetime.strptime(request.POST.get('txtHora'), '%H:%M').time()
 
             existe = Cita.objects.filter(
                 medico_id=cita.medico_id,
@@ -150,8 +155,8 @@ def editar_cita(request, cita_id):
         'cita': cita,
         'pacientes': Paciente.objects.all(),
         'medicos': Medico.objects.all(),
-        'especialidades': Especialidad.objects.all(),
         'servicios': Servicio.objects.all(),
+        'pagos': cita.pagos.all(),
     })
 
 
