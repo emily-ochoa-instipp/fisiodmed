@@ -18,50 +18,30 @@ def tabla_pagos(request):
 @login_required
 @user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def registrar_pago(request, cita_id):
+    if request.method != 'POST':
+        return redirect('editar_cita', cita_id)
+    
     cita = get_object_or_404(Cita, id=cita_id)
 
-    if request.method == 'POST':
-        monto = request.POST.get('monto')
-        metodo = request.POST.get('metodo')
-        observacion = request.POST.get('observacion')
+    monto = Decimal(request.POST.get('monto'))
+    metodo = request.POST.get('metodo')
+    observacion = request.POST.get('observacion')
 
-        if not monto or not metodo:
-            messages.error(request, 'Debe completar los campos obligatorios')
-            return redirect('editar_cita', cita.id)
+    if monto > cita.saldo_pendiente():
+        messages.error(request, 'El monto supera el saldo pendiente')
+        return redirect('editar_cita', cita.id)
 
-        monto = Decimal(monto)
+    Pago.objects.create(
+        cita=cita,
+        monto=monto,
+        metodo=metodo,
+        observacion=observacion
+    )
 
-        # Validación: no permitir pagar más del total
-        total_pagado = sum(p.monto for p in cita.pagos.all())
-        saldo = cita.total - total_pagado
-
-        if monto > saldo:
-            messages.error(request, 'El monto supera el saldo pendiente')
-            return redirect('editar_cita', cita.id)
-
-        # Guardar pago
-        Pago.objects.create(
-            cita=cita,
-            monto=monto,
-            metodo=metodo,
-            observacion=observacion
-        )
-
-        # Recalcular estado de pago
-        total_pagado += monto
-
-        if total_pagado == 0:
-            cita.estado_pago = 'pendiente'
-        elif total_pagado < cita.total:
-            cita.estado_pago = 'parcial'
-        else:
-            cita.estado_pago = 'pagado'
-
-        cita.save()
-
-        messages.success(request, 'Pago registrado correctamente')
-
+    cita.actualizar_estado_pago()
+    messages.success(request, 'Pago registrado correctamente')
     return redirect('editar_cita', cita.id)
+
 
 @login_required
 @user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
@@ -76,7 +56,7 @@ def editar_pago(request, pago_id):
 
         # Recalcular saldo sin este pago
         total_pagado = sum(p.monto for p in cita.pagos.exclude(id=pago.id))
-        saldo = cita.total - total_pagado
+        saldo = cita.total_servicio() - total_pagado
 
         if monto > saldo:
             messages.error(request, 'El monto supera el saldo pendiente')
@@ -94,7 +74,7 @@ def editar_pago(request, pago_id):
 
     return render(request, 'pagos/editar_pago.html', {
         'pago': pago,
-        'metodos': Pago.METODO_PAGO
+        'METODOS_PAGO': Pago.METODO_PAGO
     })
 
 @login_required

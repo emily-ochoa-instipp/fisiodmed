@@ -12,7 +12,6 @@ class Cita(models.Model):
     servicio = models.ForeignKey('servicios.Servicio', on_delete=models.SET_NULL, null=True)
     medico = models.ForeignKey('medicos.Medico', on_delete=models.CASCADE)
 
-    motivo = models.CharField(max_length=200, null=True,  blank=True)
     fecha = models.DateField()
     hora= models.TimeField()
     duracion = models.CharField(max_length=40, null=True,  blank=True)
@@ -25,7 +24,7 @@ class Cita(models.Model):
 # LÓGICA DE PAGOS 
 
     def total_servicio(self):
-        return self.servicio.precio if self.servicio else Decimal('0.00')
+        return self.servicio.costo if self.servicio else Decimal('0.00')
 
     def total_pagado(self):
         return self.pagos.aggregate(total=Sum('monto'))['total'] or Decimal('0.00')

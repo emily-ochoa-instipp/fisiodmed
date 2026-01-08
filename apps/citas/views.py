@@ -38,7 +38,6 @@ def tabla_citas(request):
         'pacientes': pacientes,
         'medicos': medicos,
         'servicios': servicios,
-        'metodos_pago': Pago.METODO_PAGO,
     })
 
 @login_required
@@ -157,6 +156,7 @@ def editar_cita(request, cita_id):
         'medicos': Medico.objects.all(),
         'servicios': Servicio.objects.all(),
         'pagos': cita.pagos.all(),
+        'METODOS_PAGO': Pago.METODO_PAGO,
     })
 
 

@@ -8,62 +8,47 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  </div>
+                {% endfor %}
+              {% endif %}
               <h2 class="page-title">Editar pago</h2>
               <div class="card-deck">
                 <div class="card shadow mb-4">
                   <div class="card-body">
-                    <form>
+                    <form method="post" action="">
+                      {% csrf_token %}
                       <div class="form-row">
                         <div class="form-group col-md-6">
-                          <label for="inputPaciente">Paciente</label>
-                          <select id="inputPaciente" class="form-control">
-                            <option selected>Seleccionar paciente</option>
-                            <option>Emily Ochoa</option>
-                            <option>Fabian Hernandez</option>
-                            <option>Melissa Ambuludi</option>
-                            <option>Anais Granda</option>
+                          <label>Monto</label>
+                          <input type="number" step="0.01" min="0" name="monto" class="form-control" value="{{ pago.monto|stringformat:'.2f'   }}">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label>Metodo</label>
+                          <select class="form-control" name="metodo" required>
+                            <option value="">Seleccionar</option>
+                            {% for value, label in METODOS_PAGO %}
+                              <option value="{{ value }}" {% if pago.metodo == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
                           </select>
                         </div>
-                        <div class="form-group col-md-6">
-                          <label for="inputFch">Fecha</label>
-                          <input type="date" class="form-control" id="inputFchN" placeholder="Fecha">
+
+                        <div class="form-group col-md-12">
+                          <div class="form-group">
+                            <label>Observación</label>
+                            <textarea class="form-control" name="observacion" rows="2">{{ pago.observacion|default:''  }}</textarea>
+                          </div>
                         </div>
-                        <div class="form-group col-md-6">
-                          <label for="inputServicio">Servicio</label>
-                          <select id="inputServicio" class="form-control">
-                            <option selected>Seleccionar servicio</option>
-                            <option>Rehabilitación</option>
-                            <option>Consulta</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                          <label for="inputMedio">Medio</label>
-                          <select id="inputMedio" class="form-control">
-                            <option selected>Seleccionar medio</option>
-                            <option>Efectivo</option>
-                            <option>Tranferencia</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                          <label for="inputMontoT">Monto total</label>
-                          <input type="number" class="form-control" id="inputMontoT" placeholder="Monto total">
-                        </div>
-                        <div class="form-group col-md-6">
-                          <label for="inputMontoP">Monto pendiente</label>
-                          <input type="number" class="form-control" id="inputMontoP" placeholder="Monto pendiente">
-                        </div>
-                         <div class="form-group col-md-6">
-                          <label for="inputEstado">Estado</label>
-                          <select id="inputEstado" class="form-control">
-                            <option selected>Seleccionar estado</option>
-                            <option>Pago parcial</option>
-                            <option>otro</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-6"></div>
                         
-                        <button type="submit" class="btn btn-primary mr-4">Guardar</button>
-                        <button type="submit" class="btn btn-danger">Cancelar</button>
+                        <div class=" d-flex justify-content-right">
+                            <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                            <a href="{% url 'editar_cita' pago.cita.id %}" class="btn btn-danger">Cancelar</a>
+                        </div>
                       </div>
                     </form>
                   </div>
