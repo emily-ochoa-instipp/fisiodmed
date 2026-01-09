@@ -36,8 +36,6 @@ INSTALLED_APPS = [
     'apps.usuarios',
     'apps.citas',
     'apps.inicio',
-    'apps.dashboard',
-    'apps.reportes',
     'apps.autenticacion',
     'apps.especialidades',
     'apps.medicos',
