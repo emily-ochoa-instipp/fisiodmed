@@ -52,7 +52,13 @@
                             <td>{{ cita.fecha }}</td>
                             <td>{{ cita.hora }}</td>
                             <td>
-                              <span class="badge badge-info">{{ cita.estado_cita }}</span>
+                              <span class="badge 
+                                {% if cita.estado_cita == 'atendida' %}badge-success
+                                {% elif cita.estado_cita == 'cancelada' %}badge-danger
+                                {% elif cita.estado_cita == 'no_asistio' %}badge-secondary
+                                {% else %}badge-warning{% endif %}">
+                                {{ cita.get_estado_cita_display }}
+                              </span>
                             </td>
                             <td>
                               {% if cita.estado_pago == 'pagado' %}
@@ -157,14 +163,6 @@
                     </select>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="eventType">Motivo</label>
-                    <select id="eventMotivo" class="form-control select2" name="txtMotivo" required>
-                      <option value="">Seleccionar</option>
-                      <option value="Sesion de tratamiento">Sesion de tratamiento</option>
-                      <option value="Consulta">Consulta</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
                     <label for="inputFch">Fecha</label>
                     <input type="date" class="form-control" id="inputFch" name="txtFecha" required>
                   </div>
@@ -183,15 +181,9 @@
 
       
                 </div>
-                <div class="modal-footer d-flex justify-content-between">
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
-                    <label class="custom-control-label" for="RepeatSwitch">Todo el día</label>
-                  </div>
-                  <div>
+                <div class="modal-footer d-flex justify-content-right">
                     <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                     <a href="{% url 'tabla_citas' %}" class="btn btn-danger">Cancelar</a>
-                  </div>
                 </div>
               </form>
             </div>

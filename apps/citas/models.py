@@ -8,6 +8,19 @@ from decimal import Decimal
 # Create your models here.
 
 class Cita(models.Model):
+    ESTADOS_CITA = (
+        ('pendiente', 'Pendiente'),
+        ('atendida', 'Atendida'),
+        ('cancelada', 'Cancelada'),
+        ('no_asistio', 'No asistió'),
+    )
+
+    ESTADOS_PAGO = (
+        ('pendiente', 'Pendiente'),
+        ('parcial', 'Parcial'),
+        ('pagado', 'Pagado'),
+    )
+
     paciente = models.ForeignKey('pacientes.Paciente', on_delete=models.CASCADE)
     servicio = models.ForeignKey('servicios.Servicio', on_delete=models.SET_NULL, null=True)
     medico = models.ForeignKey('medicos.Medico', on_delete=models.CASCADE)
@@ -15,8 +28,8 @@ class Cita(models.Model):
     fecha = models.DateField()
     hora= models.TimeField()
     duracion = models.CharField(max_length=40, null=True,  blank=True)
-    estado_cita = models.CharField(max_length=20, choices=[('pendiente', 'Pendiente'), ('atendida', 'Atendida'), ('cancelada', 'Cancelada')],default='pendiente')
-    estado_pago = models.CharField(max_length=10,choices=[('pendiente', 'Pendiente'),('parcial', 'Parcial'),('pagado', 'Pagado'),],default='pendiente')
+    estado_cita = models.CharField(max_length=20, choices=ESTADOS_CITA, default='pendiente')
+    estado_pago = models.CharField(max_length=10, choices=ESTADOS_PAGO, default='pendiente')
 
     def __str__(self):
         return f"Cita de {self.paciente} con {self.medico} el {self.fecha} a las {self.hora}"
@@ -41,3 +54,4 @@ class Cita(models.Model):
             self.estado_pago = 'pagado'
 
         self.save(update_fields=['estado_pago'])
+

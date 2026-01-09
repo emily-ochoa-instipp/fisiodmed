@@ -20,27 +20,44 @@ def tabla_pagos(request):
 def registrar_pago(request, cita_id):
     if request.method != 'POST':
         return redirect('editar_cita', cita_id)
-    
+
     cita = get_object_or_404(Cita, id=cita_id)
 
-    monto = Decimal(request.POST.get('monto'))
-    metodo = request.POST.get('metodo')
-    observacion = request.POST.get('observacion')
-
-    if monto > cita.saldo_pendiente():
-        messages.error(request, 'El monto supera el saldo pendiente')
+    # VALIDACIÓN DE ESTADO DE CITA
+    if cita.estado_cita != 'atendida':
+        messages.error(
+            request,
+            'Solo se pueden registrar pagos en citas atendidas.'
+        )
         return redirect('editar_cita', cita.id)
 
-    Pago.objects.create(
-        cita=cita,
-        monto=monto,
-        metodo=metodo,
-        observacion=observacion
-    )
+    try:
+        monto = Decimal(request.POST.get('monto'))
+        metodo = request.POST.get('metodo')
+        observacion = request.POST.get('observacion')
 
-    cita.actualizar_estado_pago()
-    messages.success(request, 'Pago registrado correctamente')
-    return redirect('editar_cita', cita.id)
+        if monto <= 0:
+            messages.error(request, 'El monto debe ser mayor a cero.')
+            return redirect('editar_cita', cita.id)
+
+        if monto > cita.saldo_pendiente():
+            messages.error(request, 'El monto supera el saldo pendiente.')
+            return redirect('editar_cita', cita.id)
+
+        Pago.objects.create(
+            cita=cita,
+            monto=monto,
+            metodo=metodo,
+            observacion=observacion
+        )
+
+        cita.actualizar_estado_pago()
+        messages.success(request, 'Pago registrado correctamente.')
+        return redirect('editar_cita', cita.id)
+
+    except Exception:
+        messages.error(request, 'Error al registrar el pago.')
+        return redirect('editar_cita', cita.id)
 
 
 @login_required
@@ -48,6 +65,13 @@ def registrar_pago(request, cita_id):
 def editar_pago(request, pago_id):
     pago = get_object_or_404(Pago, id=pago_id)
     cita = pago.cita
+
+    if cita.estado_cita != 'atendida':
+        messages.error(
+            request,
+            'No se pueden modificar pagos de una cita no atendida.'
+        )
+        return redirect('editar_cita', cita.id)
 
     if request.method == 'POST':
         monto = Decimal(request.POST.get('monto'))
@@ -82,6 +106,13 @@ def editar_pago(request, pago_id):
 def eliminar_pago(request, pago_id):
     pago = get_object_or_404(Pago, id=pago_id)
     cita = pago.cita
+
+    if cita.estado_cita != 'atendida':
+        messages.error(
+            request,
+            'No se pueden eliminar pagos de una cita no atendida.'
+        )
+        return redirect('editar_cita', cita.id)
 
     pago.delete()
     cita.actualizar_estado_pago()
