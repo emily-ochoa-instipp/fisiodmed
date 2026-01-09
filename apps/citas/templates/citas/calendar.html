@@ -43,16 +43,6 @@
                           </div>
 
                           <div class="form-group col-md-6">
-                            <label for="eventType">Especialidad</label>
-                            <select id="eventEspecialidad" class="form-control select2" name="txtEspecialidad" required>
-                              <option value="">Seleccionar</option>
-                              {% for especialidad in especialidades %}
-                              <option value="{{ especialidad.id }}">{{ especialidad }}</option>
-                              {% endfor %}
-                            </select>
-                          </div>
-
-                          <div class="form-group col-md-6">
                             <label for="eventType">Médico</label>
                             <select id="eventMedico" class="form-control select2" name="txtMedico" required>
                               <option value="">Seleccionar</option>
@@ -61,20 +51,13 @@
                               {% endfor %}
                             </select>
                           </div>
-                          <div class="form-group col-md-6">
-                            <label for="eventType">Motivo</label>
-                            <select id="eventMotivo" class="form-control select2" name="txtMotivo" required>
-                              <option value="">Seleccionar</option>
-                              <option value="Sesion de tratamiento">Sesion de tratamiento</option>
-                              <option value="Consulta">Consulta</option>
-                            </select>
-                          </div>
+                          
                           <div class="form-group col-md-6">
                             <label for="eventType">Servicio</label>
                             <select id="eventServicio" class="form-control select2" name="txtServicio" required>
                               <option value="">Seleccionar</option>
                               {% for servicio in servicios %}
-                              <option value="{{ servicio.id }}">{{ servicio }}</option>
+                              <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
                               {% endfor %}
                             </select>
                           </div>
@@ -89,21 +72,16 @@
                           
                           <div class="form-group col-md-6">
                             <label for="eventType">Duración</label>
-                            <select id="eventDuracion" class="form-control select2" name="txtDuracion" required>
+                            <select id="eventDuracion" class="form-control select2" name="txtDuracion">
                               <option value="">Seleccionar</option>
                               <option value="45 minutos">45 minutos</option>
                             </select>
                           </div>
+              
                         </div>
-                        <div class="modal-footer d-flex justify-content-between">
-                          <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
-                            <label class="custom-control-label" for="RepeatSwitch">Todo el día</label>
-                          </div>
-                          <div>
+                        <div class="modal-footer d-flex justify-content-right">
                             <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                             <a href="{% url 'calendar' %}" class="btn btn-danger">Cancelar</a>
-                          </div>
                         </div>
                       </form>
                     </div>
@@ -158,9 +136,10 @@
             events: '/citas/calendario/',
             eventRender: function(info) {
                 var medico = info.event.extendedProps.medico;
-                var motivo = info.event.extendedProps.motivo;
                 var servicio = info.event.extendedProps.servicio;
                 var hora = info.event.extendedProps.hora;
+                var estadoCita = info.event.extendedProps.estado_cita;
+                var estadoPago = info.event.extendedProps.estado_pago;
                 var paciente = info.event.title;
 
                 // Estructura de Card HTML
@@ -177,8 +156,14 @@
                             <strong>Médico</strong>
                             <div>${medico}</div>
                             
-                            <strong>Servicio / Motivo</strong>
-                            <div>${servicio} - ${motivo}</div>
+                            <strong>Servicio</strong>
+                            <div>${servicio}</div>
+                            <hr>
+                            <strong>Estado de la cita:</strong>
+                            <div>${estadoCita}</div>
+
+                            <strong>Estado del pago:</strong>
+                            <div>${estadoPago}</div>
                         </div>
                     </div>
                 `;
