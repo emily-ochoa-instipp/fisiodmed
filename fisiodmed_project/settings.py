@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 
-from decouple import fisiodmed_project
+from decouple import config
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,9 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = ''
 
-SECRET_KEY = fisiodmed_project('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = fisiodmed_project('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     'localhost',
