@@ -93,6 +93,16 @@
               </a>
             </li>
           {% endif %}
+<!--citas-->
+            {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'calendar' %}">
+                <i class="fe fe-calendar fe-16"></i>
+                <span class="ml-3 item-text">Citas</span>
+              </a>
+            </li>
+          {% endif %}
+<!--Agenda-->
 <!--Pacientes-->
           {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
             <li class="nav-item w-100">
@@ -102,21 +112,21 @@
               </a>
             </li>
           {% endif %}
-<!--medicos-->
-          {% if request.user|has_group:"Administrador" %}
-            <li class="nav-item w-100">
-              <a class="nav-link" href="{% url 'tabla_medicos' %}">
-                <i class="fe fe-users fe-16"></i>
-                <span class="ml-3 item-text">Médicos</span>
-              </a>
-            </li>
-          {% endif %}
 <!--especialidades-->
           {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_especialidades' %}">
                 <i class="fe fe-folder-plus fe-16"></i>
                 <span class="ml-3 item-text">Especialidades</span>
+              </a>
+            </li>
+          {% endif %}
+<!--medicos-->
+          {% if request.user|has_group:"Administrador" %}
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'tabla_medicos' %}">
+                <i class="fe fe-users fe-16"></i>
+                <span class="ml-3 item-text">Médicos</span>
               </a>
             </li>
           {% endif %}
@@ -130,47 +140,6 @@
             </li>
           {% endif %}
 
-<!--Agenda-->
-          {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
-            <li class="nav-item dropdown">
-              <a href="#agendaMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="fe fe-calendar fe-16"></i>
-                <span class="ml-3 item-text">Citas</span>
-              </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="agendaMenu">
-                <!--calendario-->
-              <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'calendar' %}"><span class="ml-1 item-text">Calendario</span></a>
-              </li>
-              </ul>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="agendaMenu">
-              <!--lista-->
-              <li class="nav-item">
-                <a class="nav-link pl-3" href="{% url 'tabla_citas' %}"><span class="ml-1 item-text">Listar citas</span></a>
-              </li>
-              </ul>
-            </li>
-          {% endif %}
-<!--Pagos-->
-          {% if request.user|has_group:"Recepcionista,Administrador" %}
-            <li class="nav-item w-100">
-              <a class="nav-link" href="">
-                <i class="fe fe-credit-card fe-16"></i>
-                <span class="ml-3 item-text">Pagos</span>
-              </a>
-            </li>
-          {% endif %}
-<!--Reportes-->
-          {% if request.user|has_group:"Recepcionista,Administrador" %}
-            <li class="nav-item w-100">
-              <a class="nav-link" href="{% url 'tabla_reportes' %}">
-                <i class="fe fe-trending-up fe-16"></i>
-                <span class="ml-3 item-text">Reportes</span>
-              </a>
-            </li>
-          {% endif %}
 <!--Usuarios-->
           {% if request.user|has_group:"Administrador" %}
             <li class="nav-item w-100">
@@ -180,21 +149,7 @@
               </a>
             </li>
           {% endif %}
-
-<!--soporte-->
-            <li class="nav-item dropdown">
-              <a href="#support" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="fe fe-compass fe-16"></i>
-                <span class="ml-3 item-text">Soporte</span>
-              </a>
-              <!--Submenu-->
-              <ul class="collapse list-unstyled pl-4 w-100" id="support">
-                <a class="nav-link pl-3" href="./support-center.html"><span class="ml-1">Home</span></a>
-                <a class="nav-link pl-3" href="./support-tickets.html"><span class="ml-1">Tickets</span></a>
-                <a class="nav-link pl-3" href="./support-ticket-detail.html"><span class="ml-1">Ticket Detail</span></a>
-                <a class="nav-link pl-3" href="./support-faqs.html"><span class="ml-1">FAQs</span></a>
-              </ul>
-            </li>
+<!--usuarios-->
         </nav>
       </aside>
 <!--MENU-->
