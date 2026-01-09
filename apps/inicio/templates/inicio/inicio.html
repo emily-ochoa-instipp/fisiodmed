@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load roles %}
+
+{% load static %}
+
+{% block contenido %}
+
+<main role="main" class="main-content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12">
+
+        <div class="row align-items-center mb-2">
+          <div class="col">
+            <h2 class="h5 page-title">Bienvenida, {{ user.first_name }} {{ user.last_name }}!</h2>
+          </div>
+          <div class="col-auto">
+            <form class="form-inline">
+              <div class="form-group d-none d-lg-inline">
+                <label for="reportrange" class="sr-only">Date Ranges</label>
+                <div id="reportrange" class="px-2 py-2 text-muted">
+                  <span class="small"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <button type="button" id="btn-refresh" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-5">
+
+          <div class="col mb-4">
+            <div class="card shadow border-0">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-3 text-center">
+                    <span class="circle circle-sm bg-primary">
+                      <i class="fe fe-16 fe-calendar text-white mb-0"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <p class="small text-muted mb-0">Citas pendientes</p>
+                    <span class="h3 mb-0">{{ citas_pendientes_count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col mb-4">
+            <div class="card shadow border-0">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-3 text-center">
+                    <span class="circle circle-sm bg-danger">
+                      <i class="fe fe-16 fe-calendar text-white mb-0"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <p class="small text-muted mb-0">Pacientes totales</p>
+                    <span class="h3 mb-0">{{ pacientes_count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col mb-4">
+            <div class="card shadow border-0">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-3 text-center">
+                    <span class="circle circle-sm bg-warning">
+                      <i class="fe fe-16 fe-folder text-white mb-0"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <p class="small text-muted mb-0">Medicos activos</p>
+                    <span class="h3 mb-0">{{ medicos_activos_count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col mb-4">
+            <div class="card shadow border-0">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-3 text-center">
+                    <span class="circle circle-sm bg-info">
+                      <i class="fe fe-16 fe-folder text-white mb-0"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <p class="small text-muted mb-0">Proyectos realizados</p>
+                    <span class="h3 mb-0">{{ proyectos_realizados_count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="col mb-4">
+            <div class="card shadow border-0">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-3 text-center">
+                    <span class="circle circle-sm bg-success">
+                      <i class="fe fe-16 fe-users text-white mb-0"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <p class="small text-muted mb-0">Usuarios creados</p>
+                    <span class="h3 mb-0">{{ usuarios_activos_count }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <!-- Small table -->
+            <div class="col-md-12">
+              <div class="card shadow ">
+                <div class="card-header">
+                  <h3 class="card-title h5 text-center mt-4">Citas pendientes</h3> 
+                </div> 
+                <div class="card-body">                 
+                    <!-- table -->
+                  <div class="table-responsive">
+                      <table class="table table-hover" >
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Paciente</th>
+                            <th>Médico</th>
+                            <th>Servicio</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Pago</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for cita in citas_pendientes %}
+                          <tr>
+                            <td>{{ cita.id }}</td>
+                            <td>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</td>
+                            <td>{{ cita.medico }}</td>
+                            <td>{{ cita.servicio.nombre }}</td>
+                            <td>{{ cita.fecha }}</td>
+                            <td>{{ cita.hora }}</td>
+                            <td>
+                              <span class="badge 
+                                {% if cita.estado_cita == 'atendida' %}badge-success
+                                {% elif cita.estado_cita == 'cancelada' %}badge-danger
+                                {% elif cita.estado_cita == 'no_asistio' %}badge-secondary
+                                {% else %}badge-warning{% endif %}">
+                                {{ cita.get_estado_cita_display }}
+                              </span>
+                            </td>
+                            <td>
+                              {% if cita.estado_pago == 'pagado' %}
+                                <span class="badge badge-success">Pagado</span>
+                              {% elif cita.estado_pago == 'parcial' %}
+                                <span class="badge badge-warning">Parcial</span>
+                              {% else %}
+                                <span class="badge badge-danger">Pendiente</span>
+                              {% endif %}
+                            </td>
+
+                          </tr>
+                          {% empty %}
+                          <tr><td colspan="8">No hay eventos registrados</td></tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>                     
+                  </div>
+                </div>
+              </div>
+          </div> <!-- simple table -->
+
+          <!-- Small table -->
+            <div class="col-md-12 mt-4">
+              <div class="card shadow">
+                <div class="card-header">
+                  <h3 class="card-title h5 text-center mt-4">Médicos activos</h3> 
+                </div> 
+                <div class="card-body">     
+                  <div class="table-responsive">            
+                    <!-- table -->
+                    <table class="table table-hover;">
+                      <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Especialidad</th>
+                            <th>N°doc</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Dirección</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for medico in medicos_activos %}
+                          <tr>
+                            <td>{{ medico.id }}</td>
+                            <td>{{ medico.usuario.user.first_name }}</td>
+                            <td>{{ medico.usuario.user.last_name }}</td>
+                            <td>{{ medico.especialidad.nombre }}</td>
+                            <td>{{ medico.usuario.num_doc }}</td>
+                            <td>{{ medico.usuario.telefono }}</td>
+                            <td>{{ medico.usuario.user.email }}</td>
+                            <td>{{ medico.direccion }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5">No hay proyectos registrados</td></tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>                     
+                  </div>
+                </div>
+              </div>
+            </div> <!-- simple table -->
+            
+            <!-- Small table -->
+            <div class="col-md-12 mt-4">
+              <div class="card shadow">
+                <div class="card-header">
+                  <h3 class="card-title h5 text-center mt-4">Usuarios activos</h3> 
+                </div> 
+                <div class="card-body">  
+                  <div class="table-responsive">               
+                    <!-- table -->
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Foto</th>
+                          <th>Nombres</th>
+                          <th>Apellidos</th>
+                          <th>Rol</th>
+                          <th>Correo</th>
+                          <th>Teléfono</th>
+                          <th>Usuario</th>
+                          <th>N°doc</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for usuario in usuarios_activos %}
+                        <tr>
+                          <td>{{ usuario.id }}</td>
+                          <td>
+                            <div class="avatar avatar-sm">
+                              {% if usuario.foto %}
+                                <img src="{{ usuario.foto.url }}" class="rounded-circle">
+                              {% else %}
+                                <img src="{% static 'assets/avatars/default.png' %}" class="rounded-circle">
+                              {% endif %}
+                            </div>
+                          </td>
+                          <td>{{ usuario.user.first_name }}</td>
+                          <td>{{ usuario.user.last_name }}</td>
+                          <td>
+                            {% for grupo in usuario.user.groups.all %}
+                              {{ grupo.name }}
+                            {% empty %}
+                              Sin rol
+                            {% endfor %}
+                          </td>
+                          <td>{{ usuario.user.email }}</td>
+                          <td>{{ usuario.telefono }}</td>
+                          <td>{{ usuario.user.username }}</td>
+                          <td>{{ usuario.num_doc }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="9">No hay usuarios registrados</td></tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>                     
+                  </div>
+                </div>
+              </div>
+            </div> <!-- simple table -->
+        </div><!-- row -->
+
+      </div> <!-- .col-12 -->
+    </div> <!-- .row -->
+  </div> <!-- .container-fluid -->
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Este evento YA existe en la plantilla
+  $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+    let inicio = picker.startDate;
+    let fin = picker.endDate;
+
+    document.querySelectorAll('tbody tr').forEach(function (fila) {
+
+      let celdaFecha = fila.querySelector('.fecha-filtro');
+      if (!celdaFecha) return;
+
+      let fechaFila = moment(celdaFecha.dataset.fecha, 'YYYY-MM-DD');
+
+      if (fechaFila.isBetween(inicio, fin, 'day', '[]')) {
+        fila.style.display = '';
+      } else {
+        fila.style.display = 'none';
+      }
+    });
+  });
+
+});
+</script>
+
+{% endblock %}
+
