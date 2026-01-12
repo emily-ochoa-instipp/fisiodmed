@@ -4,7 +4,7 @@ from apps.medicos.models import Medico
 from apps.especialidades.models import Especialidad
 from apps.usuarios.models import Usuario
 from django.contrib.auth.models import User, Group
-from apps.usuarios.decorators import roles_permitidos
+from apps.usuarios.decorators import roles_permitidos, validar_grupos_existentes
 from django.contrib import messages
 
 
@@ -16,6 +16,9 @@ from django.contrib import messages
 def tabla_medicos(request):
     medicos = Medico.objects.all()
     especialidades = Especialidad.objects.all() 
+
+    validar_grupos_existentes(request)
+    
     return render(request, 'medicos/tabla_medicos.html', {
         'medicos': medicos,
         'especialidades': especialidades,
@@ -23,6 +26,8 @@ def tabla_medicos(request):
 @login_required
 @user_passes_test(roles_permitidos(['Administrador']))
 def registrar_medico(request):
+    validar_grupos_existentes(request)
+
     if request.method == 'POST':
         nombres = request.POST['txtNombres']
         apellidos = request.POST['txtApellidos']
@@ -81,6 +86,8 @@ def registrar_medico(request):
 def editar_medico(request, medico_id):
     medico = get_object_or_404(Medico, id=medico_id)
     especialidades = Especialidad.objects.all()
+
+    validar_grupos_existentes(request)
 
     if request.method == 'POST':
         usuario = medico.usuario

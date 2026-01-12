@@ -9,7 +9,7 @@ from django.contrib import messages
 
 from django.contrib.auth import password_validation 
 from django.core.exceptions import ValidationError
-from apps.usuarios.decorators import roles_permitidos
+from apps.usuarios.decorators import roles_permitidos, validar_grupos_existentes
 
 # Create your views here.
 
@@ -17,6 +17,8 @@ from apps.usuarios.decorators import roles_permitidos
 @user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador']))
 
 def tabla_usuarios(request):
+    validar_grupos_existentes(request)
+
     usuarios = Usuario.objects.all()
     roles = Group.objects.all() 
     return render(request, 'usuarios/tabla_usuarios.html', {
@@ -26,6 +28,8 @@ def tabla_usuarios(request):
 @login_required
 @user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador']))
 def registrar_usuario(request):
+    validar_grupos_existentes(request)
+
     if request.method == 'POST':
             first_name_ = request.POST.get('txtNombres')
             last_name_ = request.POST.get('txtApellidos')
@@ -62,7 +66,13 @@ def registrar_usuario(request):
             user.save()
 
             # asignar grupo (ROL)
-            grupo = Group.objects.get(name=rol_)
+            try:
+                grupo = Group.objects.get(name=rol_)
+            except Group.DoesNotExist:
+                messages.error(request, "No existen roles creados. Contacte al administrador.")
+                return redirect('tabla_usuarios')
+
+
             user.groups.add(grupo)
 
             #perfil Usuario se crea automáticamente por signals.py
@@ -80,6 +90,9 @@ def registrar_usuario(request):
 
 def editar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    validar_grupos_existentes(request)
+    
     if request.method == 'POST':
         user = usuario.user
         usuario.user.first_name = request.POST.get('txtNombres')
