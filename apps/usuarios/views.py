@@ -92,7 +92,7 @@ def editar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
 
     validar_grupos_existentes(request)
-    
+
     if request.method == 'POST':
         user = usuario.user
         usuario.user.first_name = request.POST.get('txtNombres')
@@ -106,7 +106,13 @@ def editar_usuario(request, usuario_id):
 
         # cambiar rol (grupo)
         rol_ = request.POST.get('txtRol')
-        grupo = Group.objects.get(name=rol_)
+        
+        try:
+            grupo = Group.objects.get(name=rol_)
+        except Group.DoesNotExist:
+            messages.error(request, "No existen roles creados.")
+            return redirect('tabla_usuarios')
+
         user.groups.clear()
         user.groups.add(grupo)
 
