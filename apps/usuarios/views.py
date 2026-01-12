@@ -59,7 +59,7 @@ def registrar_usuario(request):
                 last_name=last_name_,
                 email=email_,
                 username=username_,
-                password='12345'
+                password=num_doc_
             )
 
             user.is_active = True   # Activo por defecto
