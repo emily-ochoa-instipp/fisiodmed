@@ -18,7 +18,7 @@
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
-                {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
+                {% if request.user|has_group:"Administrador" %}
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
                 {% endif %}
                 </div>

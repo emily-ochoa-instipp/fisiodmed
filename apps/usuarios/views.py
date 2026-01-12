@@ -14,7 +14,7 @@ from apps.usuarios.decorators import roles_permitidos, validar_grupos_existentes
 # Create your views here.
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador']))
+@user_passes_test(roles_permitidos(['Recepcionista', 'Administrador']))
 
 def tabla_usuarios(request):
     validar_grupos_existentes(request)
@@ -26,7 +26,7 @@ def tabla_usuarios(request):
     })
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador']))
+@user_passes_test(roles_permitidos(['Administrador']))
 def registrar_usuario(request):
     validar_grupos_existentes(request)
 
@@ -86,7 +86,7 @@ def registrar_usuario(request):
     return redirect('tabla_usuarios')
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador']))
+@user_passes_test(roles_permitidos(['Administrador']))
 
 def editar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
@@ -106,7 +106,7 @@ def editar_usuario(request, usuario_id):
 
         # cambiar rol (grupo)
         rol_ = request.POST.get('txtRol')
-        
+
         try:
             grupo = Group.objects.get(name=rol_)
         except Group.DoesNotExist:
@@ -127,7 +127,7 @@ def editar_usuario(request, usuario_id):
     return render(request, 'usuarios/editar_usuario.html', {'usuario': usuario, 'roles': roles})
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador']))
+@user_passes_test(roles_permitidos(['Administrador']))
 
 def eliminar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
@@ -137,7 +137,7 @@ def eliminar_usuario(request, usuario_id):
     return redirect('tabla_usuarios')
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Presidenta', 'Administrador', 'Socia']))
+@user_passes_test(roles_permitidos(['Recepcionista', 'Medico', 'Administrador']))
 
 def profile(request):
     usuario = Usuario.objects.get(user=request.user)

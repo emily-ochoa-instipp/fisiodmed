@@ -18,8 +18,10 @@
               {% endif %}
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
-                {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
+                {% if request.user|has_group:"Recepcionista,Administrador,Medico" %}
                   <a href="{% url 'calendar' %}" class="btn btn-primary mr-2">Ver calendario</a>
+                {% endif %}
+                {% if request.user|has_group:"Recepcionista,Administrador" %}
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Crear cita +</button>
                 {% endif %}
                 </div>

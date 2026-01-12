@@ -7,7 +7,7 @@ from django.contrib import messages
 # Create your views here.
 
 @login_required
-@user_passes_test(roles_permitidos(['Administrador']))
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def tabla_especialidades(request):
     especialidades = Especialidad.objects.all()
     return render(request, 'especialidades/tabla_especialidades.html', {

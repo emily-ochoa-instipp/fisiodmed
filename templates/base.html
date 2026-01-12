@@ -85,7 +85,7 @@
 
           <ul class="navbar-nav flex-fill w-100 mb-2">
 <!--dashboard-->
-          {% if request.user|has_group:"Administrador" %}
+          {% if request.user|has_group:"Administrador, Recepcionista" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'inicio' %}">
                 <i class="fe fe-home fe-16"></i>
@@ -94,7 +94,7 @@
             </li>
           {% endif %}
 <!--citas-->
-            {% if request.user|has_group:"Secretaria,Recepcionista,Administrador,Medico" %}
+            {% if request.user|has_group:"Recepcionista,Administrador,Medico" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'calendar' %}">
                 <i class="fe fe-calendar fe-16"></i>
@@ -104,7 +104,7 @@
           {% endif %}
 <!--Agenda-->
 <!--Pacientes-->
-          {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
+          {% if request.user|has_group:"Recepcionista,Administrador,Medico" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_pacientes' %}">
                 <i class="fe fe-users fe-16"></i>
@@ -113,7 +113,7 @@
             </li>
           {% endif %}
 <!--especialidades-->
-          {% if request.user|has_group:"Administrador" %}
+          {% if request.user|has_group:"Administrador, Recepcionista" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_especialidades' %}">
                 <i class="fe fe-folder-plus fe-16"></i>
@@ -122,7 +122,7 @@
             </li>
           {% endif %}
 <!--medicos-->
-          {% if request.user|has_group:"Administrador" %}
+          {% if request.user|has_group:"Administrador, Recepcionista" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_medicos' %}">
                 <i class="fe fe-users fe-16"></i>
@@ -131,7 +131,7 @@
             </li>
           {% endif %}
 <!--Servicios-->
-          {% if request.user|has_group:"Administrador" %}
+          {% if request.user|has_group:"Administrador, Recepcionista" %}
             <li class="nav-item w-100">
               <a class="nav-link" href="{% url 'tabla_servicios' %}">
                 <i class="fe fe-activity fe-16"></i>

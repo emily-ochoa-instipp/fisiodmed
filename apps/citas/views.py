@@ -196,36 +196,55 @@ def eliminar_cita(request, cita_id):
     cita.delete()
     return redirect('tabla_citas')
 
+
 @login_required
-@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista', 'Medico']))
 def citas_calendario(request):
-    citas = Cita.objects.all()
+
+    user = request.user  # usuario logueado
+
+    # ADMIN  y RECEPCIONISTA VEN TODAS LAS CITAS
+    if user.is_superuser or user.groups.filter(
+        name__in=['Administrador', 'Recepcionista']
+    ).exists():
+        citas = Cita.objects.all()
+
+    # 2MÉDICO  SOLO  VE SUS CITAS
+    elif user.groups.filter(name='Medico').exists():
+        try:
+            medico = user.medico  
+            citas = Cita.objects.filter(medico=medico)
+        except Medico.DoesNotExist:
+            citas = Cita.objects.none()
+
+    # OTROS  NADA
+    else:
+        citas = Cita.objects.none()
+
     eventos = []
 
     for cita in citas:
-
         # COLORES SEGÚN ESTADO DE LA CITA
         colores = {
-            'pendiente': '#007bff',   # azul
-            'atendida': '#28a745',    # verde
-            'cancelada': '#dc3545',   # rojo
-            'no_asistio': '#6c757d',  # gris
+            'pendiente': '#007bff',
+            'atendida': '#28a745',
+            'cancelada': '#dc3545',
+            'no_asistio': '#6c757d',
         }
 
         eventos.append({
-            'title': f'{cita.paciente}',
+            'title': str(cita.paciente),
             'start': f'{cita.fecha}T{cita.hora}',
-            'backgroundColor': colores.get(cita.estado_cita, '#3788d8'),
-            'borderColor': colores.get(cita.estado_cita, '#3788d8'),
-            # Datos adicionales para el tooltip
+            'backgroundColor': colores.get(cita.estado_cita),
+            'borderColor': colores.get(cita.estado_cita),
+            # Datos  para el tooltip
             'extendedProps': {
                 'medico': str(cita.medico),
                 'servicio': str(cita.servicio),
-                'hora': cita.hora.strftime("%H:%M"),
+                'hora': cita.hora.strftime('%H:%M'),
                 'estado_cita': cita.get_estado_cita_display(),
                 'estado_pago': cita.get_estado_pago_display(),
             }
         })
 
     return JsonResponse(eventos, safe=False)
-

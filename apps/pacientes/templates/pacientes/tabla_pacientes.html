@@ -19,7 +19,7 @@
 
               <div class="row my-4">
                 <div class="col-12 mb-3 d-flex justify-content-end">
-                {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
+                {% if request.user|has_group:"Recepcionista,Administrador,Medico" %}
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Agregar +</button>
                 {% endif %}
                 </div>
@@ -57,9 +57,10 @@
                             <td>{{ paciente.direccion }}</td>
 
                             <td>
-                              {% if request.user|has_group:"Secretaria,Administrador,Medico" %}
+                              {% if request.user|has_group:"Recepcionista,Administrador,Medico" %}
                                 <a href="{% url 'editar_paciente' paciente.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
-                              
+                              {% endif %}
+                              {% if request.user|has_group:"Administrador" %}
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ paciente.id }}">
                                   <span class="fe fe-trash fe-14 "></span>
                                 </button>

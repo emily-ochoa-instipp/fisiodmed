@@ -5,19 +5,35 @@ from apps.pacientes.models import Antecedentes
 from datetime import date
 from django.contrib import messages
 from apps.usuarios.decorators import roles_permitidos
+from apps.pacientes.utils import get_paciente_segun_usuario
+
 
 # Create your views here.
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador']))
+@user_passes_test(roles_permitidos(['Recepcionista', 'Medico','Administrador']))
 def tabla_pacientes(request):
-    pacientes = Paciente.objects.all()
+    user = request.user
+
+    # ADMIN y RECEPCIONISTA ven todos
+    if user.groups.filter(name__in=['Administrador', 'Recepcionista']).exists():
+        pacientes = Paciente.objects.all()
+
+    # MÉDICO solo ve sus pacientes
+    elif user.groups.filter(name='Medico').exists():
+        medico = user.medico  
+
+        pacientes = Paciente.objects.filter(cita__medico=medico).distinct()
+
+    else:
+        pacientes = Paciente.objects.none()
+
     return render(request, 'pacientes/tabla_pacientes.html', {
         'pacientes': pacientes
     })
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Medico', 'Administrador']))
+@user_passes_test(roles_permitidos(['Recepcionista', 'Medico', 'Administrador']))
 def registrar_paciente(request):
     if request.method == 'POST':
         num_doc = request.POST.get('txtNumDoc')
@@ -62,8 +78,15 @@ def registrar_paciente(request):
     return redirect('tabla_pacientes')
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Medico', 'Administrador']))
+@user_passes_test(roles_permitidos(['Recepcionista', 'Medico', 'Administrador']))
 def editar_paciente(request, paciente_id):
+
+    paciente = get_paciente_segun_usuario(request.user, paciente_id)
+
+    if not paciente:
+        messages.error(request, 'No tienes permiso para este paciente.')
+        return redirect('tabla_pacientes')
+    
     paciente = get_object_or_404(Paciente, id=paciente_id)
 
     if request.method == 'POST':
@@ -112,7 +135,7 @@ def editar_paciente(request, paciente_id):
 
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Medico', 'Administrador']))
+@user_passes_test(roles_permitidos(['Administrador']))
 def eliminar_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     paciente.delete()
