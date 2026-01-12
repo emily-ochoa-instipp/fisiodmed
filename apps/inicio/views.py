@@ -15,10 +15,14 @@ def inicio(request):
     hoy = date.today()
     user = request.user
 
-    # CITAS
+    es_medico = user.groups.filter(name='Medico').exists()
+    medico = None
 
-    if user.groups.filter(name='Medico').exists():
-        medico = Medico.objects.get(usuario__user=user)
+    if es_medico:
+        medico = Medico.objects.filter(usuario__user=user).first()
+
+    # CITAS
+    if es_medico and medico:
         citas_pendientes = Cita.objects.filter(
             estado_cita='pendiente',
             medico=medico
@@ -29,7 +33,7 @@ def inicio(request):
     citas_pendientes_count = citas_pendientes.count()
 
     # PACIENTES
-    if user.groups.filter(name='Medico').exists():
+    if es_medico and medico:
         pacientes = Paciente.objects.filter(
             citas__medico=medico
         ).distinct()
