@@ -108,7 +108,7 @@
           var calendar = new FullCalendar.Calendar(calendarEl,
           {
             plugins: ['dayGrid', 'timeGrid', 'list', 'bootstrap'],
-            timeZone: 'UTC',
+            timeZone: 'local',
             themeSystem: 'bootstrap',
             locale: 'es',
             buttonText: {
@@ -132,7 +132,7 @@
               nextYear: 'right-double-arrow'
             },
             weekNumbers: true,
-            eventLimit: true, // allow "more" link when too many events
+            eventLimit: false, // allow "more" link when too many events
             events: '/citas/calendario/',
             eventRender: function(info) {
                 var medico = info.event.extendedProps.medico;
