@@ -10,21 +10,36 @@ from apps.usuarios.decorators import roles_permitidos
 
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Presidenta','Administrador']))
-
+@user_passes_test(roles_permitidos(['Recepcionista', 'Medico', 'Administrador']))
 def inicio(request):
     hoy = date.today()
+    user = request.user
 
     # CITAS
-    citas_pendientes = Cita.objects.filter(estado_cita='pendiente')
+
+    if user.groups.filter(name='Medico').exists():
+        medico = Medico.objects.get(usuario__user=user)
+        citas_pendientes = Cita.objects.filter(
+            estado_cita='pendiente',
+            medico=medico
+        )
+    else:
+        citas_pendientes = Cita.objects.filter(estado_cita='pendiente')
+
     citas_pendientes_count = citas_pendientes.count()
 
     # PACIENTES
-    pacientes = Paciente.objects.filter()
+    if user.groups.filter(name='Medico').exists():
+        pacientes = Paciente.objects.filter(
+            citas__medico=medico
+        ).distinct()
+    else:
+        pacientes = Paciente.objects.all()
+
     pacientes_count = pacientes.count()
 
-    #MEDICOS
-    medicos_activos = Medico.objects.filter()
+    # MEDICOS
+    medicos_activos = Medico.objects.all()
     medicos_activos_count = medicos_activos.count()
 
     # USUARIOS
@@ -43,8 +58,6 @@ def inicio(request):
 
         'medicos_activos': medicos_activos,
         'medicos_activos_count': medicos_activos_count,
-
     }
 
     return render(request, 'inicio/inicio.html', context)
-
