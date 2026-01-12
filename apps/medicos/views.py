@@ -29,6 +29,13 @@ def registrar_medico(request):
     validar_grupos_existentes(request)
 
     if request.method == 'POST':
+        if not Group.objects.exists():
+            messages.error(
+                request,
+                "No existe rol o grupo médico creado en el admin."
+            )
+            return redirect('tabla_medicos')
+        
         nombres = request.POST['txtNombres']
         apellidos = request.POST['txtApellidos']
         especialidad_id = request.POST['txtEspecialidad']
@@ -62,7 +69,15 @@ def registrar_medico(request):
         )
         
         # ASIGNAR GRUPO MEDICO
-        grupo_medico = Group.objects.get(name='Medico')
+        try:
+            grupo_medico = Group.objects.get(name='Medico')
+        except Group.DoesNotExist:
+            messages.error(
+                request,
+                "El rol Médico no existe. Contacte al administrador."
+            )
+            user.delete()  
+            return redirect('tabla_medicos')
         user.groups.add(grupo_medico)
 
         # 3️Obtener Usuario creado por signal
