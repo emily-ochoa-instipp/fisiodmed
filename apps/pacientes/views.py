@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from apps.pacientes.models import Paciente
+from apps.medicos.models import Medico
+
 from apps.pacientes.models import Antecedentes
 from datetime import date
 from django.contrib import messages
@@ -21,9 +23,15 @@ def tabla_pacientes(request):
 
     # MÉDICO solo ve sus pacientes
     elif user.groups.filter(name='Medico').exists():
-        medico = user.medico  
+        medico = Medico.objects.filter(usuario__user=user).first()
 
-        pacientes = Paciente.objects.filter(cita__medico=medico).distinct()
+        if not medico:
+            pacientes = Paciente.objects.none()
+        else:
+            pacientes = Paciente.objects.filter(
+                citas__medico=medico
+            ).distinct()
+
 
     else:
         pacientes = Paciente.objects.none()
