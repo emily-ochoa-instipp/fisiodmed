@@ -40,7 +40,7 @@ def inicio(request):
     # PACIENTES
     if es_medico and medico:
         pacientes = Paciente.objects.filter(
-            citas__medico=medico
+            cita__medico=medico
         ).distinct()
     else:
         pacientes = Paciente.objects.all()

@@ -26,7 +26,7 @@ def tabla_pacientes(request):
         try:
             medico = Medico.objects.get(usuario=user.usuario)
             pacientes = Paciente.objects.filter(
-                citas__medico=medico
+                cita__medico=medico
             ).distinct()
         except Medico.DoesNotExist:
             pacientes = Paciente.objects.none()

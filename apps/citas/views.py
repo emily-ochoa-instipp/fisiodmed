@@ -19,9 +19,22 @@ from decimal import Decimal
 @login_required
 @user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador', 'Recepcionista']))
 def calendar(request):
+
+    user = request.user
+
+    if user.groups.filter(name='Medico').exists():
+        usuario = getattr(user, 'usuario', None)
+        medico = Medico.objects.filter(usuario=usuario).first() if usuario else None
+
+        medicos = Medico.objects.filter(id=medico.id) if medico else Medico.objects.none()
+        pacientes = Paciente.objects.filter(cita__medico=medico).distinct() if medico else Paciente.objects.none()
+    else:
+        medicos = Medico.objects.all()
+        pacientes = Paciente.objects.all()
+
     return render(request, 'citas/calendar.html', {
-        'pacientes': Paciente.objects.all(),
-        'medicos': Medico.objects.all(),
+        'pacientes': pacientes,
+        'medicos': medicos,
         'servicios': Servicio.objects.all(),
     })
 
@@ -29,17 +42,24 @@ def calendar(request):
 @login_required
 @user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador', 'Recepcionista']))
 def tabla_citas(request):
-    citas = Cita.objects.all()
-    pacientes = Paciente.objects.all()
-    medicos = Medico.objects.all()
-    servicios = Servicio.objects.all()
+
+    user = request.user
+
+    if user.groups.filter(name='Medico').exists():
+        usuario = getattr(user, 'usuario', None)
+        medico = Medico.objects.filter(usuario=usuario).first() if usuario else None
+        citas = Cita.objects.filter(medico=medico) if medico else Cita.objects.none()
+    else:
+        citas = Cita.objects.all()
 
     return render(request, 'citas/tabla_citas.html', {
         'citas': citas,
-        'pacientes': pacientes,
-        'medicos': medicos,
-        'servicios': servicios,
+        'pacientes': Paciente.objects.all(),
+        'medicos': Medico.objects.all(),
+        'servicios': Servicio.objects.all(),
     })
+
+
 
 @login_required
 @user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
@@ -211,10 +231,12 @@ def citas_calendario(request):
 
     # 2MÉDICO  SOLO  VE SUS CITAS
     elif user.groups.filter(name='Medico').exists():
-        try:
-            medico = user.medico  
-            citas = Cita.objects.filter(medico=medico)
-        except Medico.DoesNotExist:
+        usuario = getattr(user, 'usuario', None)
+
+        if usuario:
+            medico = Medico.objects.filter(usuario=usuario).first()
+            citas = Cita.objects.filter(medico=medico) if medico else Cita.objects.none()
+        else:
             citas = Cita.objects.none()
 
     # OTROS  NADA

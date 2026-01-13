@@ -48,7 +48,7 @@
               </div>
             </div>
           </div>
-
+        {% if not request.user|has_group:"Medico" %}
           <div class="col mb-4">
             <div class="card shadow border-0">
               <div class="card-body">
@@ -84,7 +84,7 @@
               </div>
             </div>
           </div>
-
+        
           <!-- <div class="col mb-4">
             <div class="card shadow border-0">
               <div class="card-body">
@@ -120,7 +120,7 @@
               </div>
             </div>
           </div>
-
+        {% endif %}
         </div>
 
         <div class="row">
@@ -184,7 +184,7 @@
                 </div>
               </div>
           </div> <!-- simple table -->
-
+        {% if not request.user|has_group:"Medico" %}
           <!-- Small table -->
             <div class="col-md-12 mt-4">
               <div class="card shadow">
@@ -288,6 +288,7 @@
                 </div>
               </div>
             </div> <!-- simple table -->
+        {% endif %}
         </div><!-- row -->
 
       </div> <!-- .col-12 -->
