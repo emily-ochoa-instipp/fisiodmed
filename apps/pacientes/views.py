@@ -23,14 +23,13 @@ def tabla_pacientes(request):
 
     # MÉDICO solo ve sus pacientes
     elif user.groups.filter(name='Medico').exists():
-        medico = Medico.objects.filter(usuario__user=user).first()
-
-        if not medico:
-            pacientes = Paciente.objects.none()
-        else:
+        try:
+            medico = Medico.objects.get(usuario=user.usuario)
             pacientes = Paciente.objects.filter(
                 citas__medico=medico
             ).distinct()
+        except Medico.DoesNotExist:
+            pacientes = Paciente.objects.none()
 
 
     else:

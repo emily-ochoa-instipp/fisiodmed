@@ -211,8 +211,8 @@
                           {% for medico in medicos_activos %}
                           <tr>
                             <td>{{ medico.id }}</td>
-                            <td>{{ medico.usuario.user.first_name }}</td>
-                            <td>{{ medico.usuario.user.last_name }}</td>
+                            <td>{{ medico.usuario.user.first_name|default:"-" }}</td>
+                            <td>{{ medico.usuario.user.last_name|default:"-" }}</td>
                             <td>{{ medico.especialidad.nombre }}</td>
                             <td>{{ medico.usuario.num_doc }}</td>
                             <td>{{ medico.usuario.telefono }}</td>
