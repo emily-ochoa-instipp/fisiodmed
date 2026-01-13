@@ -171,10 +171,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/autenticacion/login/'
 LOGOUT_REDIRECT_URL = 'login'
 
-#AUTHENTICATION_BACKENDS = [
- #   'apps.autenticacion.backends.MultiFieldAuthBackend',
-  #  'django.contrib.auth.backends.ModelBackend',
-#]
+AUTHENTICATION_BACKENDS = [
+    'apps.autenticacion.backends.MultiFieldAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'secondary',

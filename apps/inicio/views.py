@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from datetime import date
 
@@ -20,6 +20,11 @@ def inicio(request):
 
     if es_medico:
         medico = Medico.objects.filter(usuario__user=user).first()
+
+    if es_medico and not medico:
+        from django.contrib.auth import logout
+        logout(request)
+        return redirect('login')
 
     # CITAS
     if es_medico and medico:
