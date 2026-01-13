@@ -95,8 +95,6 @@ def editar_paciente(request, paciente_id):
         messages.error(request, 'No tienes permiso para este paciente.')
         return redirect('tabla_pacientes')
     
-    paciente = get_object_or_404(Paciente, id=paciente_id)
-
     if request.method == 'POST':
         num_doc = request.POST.get('txtNumDoc')
         email = request.POST.get('txtEmail')
