@@ -249,7 +249,7 @@ def citas_calendario(request):
         # COLORES SEGÚN ESTADO DE LA CITA
         colores = {
             'pendiente': "#eea303",
-            'atendida': "#28a76e",
+            'atendida': "#22a67a",
             'cancelada': '#dc3545',
             'no_asistio': '#6c757d',
         }
