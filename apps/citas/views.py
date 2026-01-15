@@ -151,8 +151,8 @@ def editar_cita(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id)
 
     # no permitir editar citas finalizadas
-    if cita.estado_cita in ['cancelada', 'atendida', 'no_asistio']:
-        messages.error(request,'No se puede modificar una cita que ya fue finalizada.')
+    if cita.estado_cita in ['cancelada', 'no_asistio']:
+        messages.error(request,'No se puede modificar una cita que fue cancelada o no asistida.')
         return redirect('tabla_citas')
 
     if request.method == 'POST':
@@ -248,8 +248,8 @@ def citas_calendario(request):
     for cita in citas:
         # COLORES SEGÚN ESTADO DE LA CITA
         colores = {
-            'pendiente': '#007bff',
-            'atendida': '#28a745',
+            'pendiente': "#eea303",
+            'atendida': "#28a76e",
             'cancelada': '#dc3545',
             'no_asistio': '#6c757d',
         }
