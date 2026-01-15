@@ -38,6 +38,7 @@
                             <th>Teléfono</th>
                             <th>Correo</th>
                             <th>Dirección</th>
+                            <th>Estado</th>
                             <th>Acción</th>
                           </tr>
                         </thead>
@@ -52,6 +53,13 @@
                             <td>{{ medico.usuario.telefono }}</td>
                             <td>{{ medico.usuario.user.email }}</td>
                             <td>{{ medico.direccion }}</td>
+                            <td>
+                                {% if medico.usuario.user.is_active %}
+                                  <span class="badge badge-success">Activo</span>
+                                {% else %}
+                                  <span class="badge badge-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
 
                             <td>
                               {% if request.user|has_group:"Administrador" %}

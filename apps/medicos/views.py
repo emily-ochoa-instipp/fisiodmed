@@ -67,6 +67,10 @@ def registrar_medico(request):
             email=email,
             password=num_doc, 
         )
+
+        user.is_active = True   # Activo por defecto
+        user.save()
+
         
         # ASIGNAR GRUPO MEDICO
         try:
@@ -115,6 +119,11 @@ def editar_medico(request, medico_id):
         telefono = request.POST['txtTelefono']
         direccion = request.POST['txtDireccion']
         especialidad_id = request.POST['txtEspecialidad']
+
+        if 'estado' in request.POST:
+            user.is_active = True
+        else:
+            user.is_active = False
 
         #  VALIDACIONES
         if User.objects.filter(username=num_doc).exclude(id=user.id).exists():
