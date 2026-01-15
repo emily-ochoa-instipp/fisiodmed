@@ -9,10 +9,18 @@
             <div class="col-12">
               <h2 class="page-title">Editar médico</h2>
               <div class="card-deck">
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
                 <div class="card shadow mb-4">
                   <div class="card-body">
                     <form method="post" action="">
-        
+                      {% csrf_token %}
                       <div class="form-row">
   
                         <div class="form-group col-md-6">
@@ -58,13 +66,13 @@
 
                       <div class="modal-footer d-flex justify-content-between">
                         <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="txtEstado" checked>
+                          <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="estado" {% if medico.usuario.user.is_active %} checked {% endif %}>
                           <label class="custom-control-label" for="RepeatSwitch">Activo</label>
                         </div>
                         <div>
                           <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                         <!--<button type="submit" class="btn btn-danger">Cancelar</button>-->
-                          <a href="{% url 'tabla_citas' %}" class="btn btn-danger">Cancelar</a>
+                          <a href="{% url 'tabla_medicos' %}" class="btn btn-danger">Cancelar</a>
                         </div>
                       </div>
                     </form>

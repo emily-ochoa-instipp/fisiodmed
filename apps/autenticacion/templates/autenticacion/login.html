@@ -7,11 +7,14 @@
   <form class="text-left" action="{% url 'login' %}" id="loginForm" method="POST">
     {% csrf_token %}
 
-    {% if error %}
-      <div class="alert alert-danger" role="alert">
-        {{ error }}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
       </div>
-    {% endif %}
+    {% endfor %}
+  {% endif %}
     
     <div class="form-group">
       <h2 class="h5 mb-1">USUARIO</h2> <label for="input-group-text" class="sr-only">Usuario</label>
@@ -42,8 +45,7 @@
   </form>
   <p class="mt-4 mb-2 text-center">
     <a href="{% url 'password_reset' %}">Recuperar contraseña</a>
-    &bull;
-    <a href="{% url 'login'%} " class="text-center">Regresar</a>
+  
   </p>
 
 {% endblock %}
