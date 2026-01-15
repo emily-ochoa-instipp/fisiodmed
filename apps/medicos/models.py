@@ -6,11 +6,10 @@ from apps.especialidades.models import Especialidad
 
 class Medico (models.Model):
     usuario = models.OneToOneField('usuarios.Usuario', on_delete=models.CASCADE)
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
-    #num_doc = models.CharField(max_length=50, verbose_name='Número documento', null=True, blank=True)
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.PROTECT)
     direccion = models.CharField(max_length=255, null=True,  blank=True)
+    activo = models.BooleanField(default=True)
 
-    #estado = models.BooleanField(default=True)
 
     def __str__(self):
         especialidad = self.especialidad.nombre if self.especialidad else 'Sin especialidad asignada'

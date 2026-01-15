@@ -57,7 +57,7 @@
                             <select id="eventServicio" class="form-control select2" name="txtServicio" required>
                               <option value="">Seleccionar</option>
                               {% for servicio in servicios %}
-                              <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
+                              <option value="{{ servicio.id }}">{{ servicio }}</option>
                               {% endfor %}
                             </select>
                           </div>

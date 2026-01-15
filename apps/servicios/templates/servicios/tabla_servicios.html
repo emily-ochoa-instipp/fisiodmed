@@ -37,6 +37,7 @@
                             <th>Sesiones</th>
                             <th>Duración</th>
                             <th>Costo</th>
+                            <th>Estado</th>
                             <th>Acción</th>
                           </tr>
                         </thead>
@@ -49,7 +50,13 @@
                             <td>{{ servicio.sesiones|default:"No aplica" }}</td>
                             <td>{{ servicio.duracion }}</td>
                             <td>${{ servicio.costo }}</td>                  
-
+                            <td>
+                              {% if servicio.activo %}
+                                <span class="badge badge-success">Activo</span>
+                              {% else %}
+                                <span class="badge badge-danger">Inactivo</span>
+                              {% endif %}
+                            </td>
                             <td>
                               {% if request.user|has_group:"Administrador" %}
                                 <a href="{% url 'editar_servicio' servicio.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
@@ -69,7 +76,7 @@
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                          ¿Estas seguro de eliminar el servicio {{ servicio.nombre }}?
+                                          ¿Estas seguro de desactivar el servicio <strong>{{ servicio.nombre }}</strong>?
                                         </div>
                                         <div class="modal-footer">
                                           <a href="{% url 'tabla_servicios' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
@@ -148,7 +155,7 @@
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
+                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" {% if servicio.activo %} checked {% endif %}>
                     <label class="custom-control-label" for="RepeatSwitch">Activo</label>
                   </div>
                   <div>

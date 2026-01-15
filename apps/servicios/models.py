@@ -4,14 +4,14 @@ from django.db import models
 
 class Servicio(models.Model):
     nombre = models.CharField(max_length=255)
-    especialidad = models.ForeignKey('especialidades.Especialidad', on_delete=models.CASCADE)
+    especialidad = models.ForeignKey('especialidades.Especialidad', on_delete=models.PROTECT)
     sesiones = models.IntegerField(null=True,  blank=True)
     duracion = models.CharField(max_length=20, null=True,  blank=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
     descripcion = models.TextField(null=True,  blank=True)
-    #estado = models.BooleanField(default=True) 
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.nombre
-    
-    
+        especialidad = self.especialidad.nombre if self.especialidad else 'Sin especialidad asignada'
+        return f"{self.nombre} - {especialidad}"
+

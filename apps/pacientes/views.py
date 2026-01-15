@@ -8,6 +8,7 @@ from datetime import date
 from django.contrib import messages
 from apps.usuarios.decorators import roles_permitidos
 from apps.pacientes.utils import get_paciente_segun_usuario
+from django.db.models.deletion import ProtectedError
 
 
 # Create your views here.
@@ -26,6 +27,7 @@ def tabla_pacientes(request):
         try:
             medico = Medico.objects.get(usuario=user.usuario)
             pacientes = Paciente.objects.filter(
+                activo=True,
                 cita__medico=medico
             ).distinct()
         except Medico.DoesNotExist:
@@ -77,6 +79,7 @@ def registrar_paciente(request):
             tipo_sangre=request.POST.get('txtTipoSangre'),
             direccion=request.POST.get('txtDireccion'),
             estado_civil=request.POST.get('txtEstadoCivil'),
+            activo=True
         )
 
         messages.success(request, 'Paciente registrado correctamente.')
@@ -130,6 +133,7 @@ def editar_paciente(request, paciente_id):
         paciente.tipo_sangre = request.POST.get('txtTipoSangre')
         paciente.direccion = request.POST.get('txtDireccion')
         paciente.estado_civil = request.POST.get('txtEstadoCivil')
+        paciente.activo = 'activo' in request.POST
 
         paciente.save()
         messages.success(request, 'Paciente actualizado correctamente.')
@@ -143,8 +147,12 @@ def editar_paciente(request, paciente_id):
 @user_passes_test(roles_permitidos(['Administrador']))
 def eliminar_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
-    paciente.delete()
-    messages.success(request, 'Paciente eliminado correctamente.')
+    paciente.activo = False
+    paciente.save()
+    messages.success(
+        request,
+        'Paciente eliminado correctamente.'
+    )
     return redirect('tabla_pacientes')
 
 

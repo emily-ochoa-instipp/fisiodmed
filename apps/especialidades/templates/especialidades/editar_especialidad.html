@@ -33,7 +33,7 @@
 
                       <div class="modal-footer d-flex justify-content-between">
                         <div class="custom-control custom-switch">
-                          <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="txtEstado" checked>
+                          <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" {% if especialidad.activo %} checked {% endif %}>
                           <label class="custom-control-label" for="RepeatSwitch">Activo</label>
                         </div>
                         <div>

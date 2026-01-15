@@ -10,7 +10,7 @@
               <h2 class="mb-2 page-title">Listado de citas</h2>
               {% if messages %}
                 {% for message in messages %}
-                  <div class="alert alert-{{ message.tags }} alert-dismissible fade" role="alert">
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                   </div>
@@ -41,6 +41,7 @@
                             <th>Hora</th>
                             <th>Estado</th>
                             <th>Pago</th>
+                            <th>Activo</th>
                             <th>Acción</th>
                           </tr>
                         </thead>
@@ -54,7 +55,7 @@
                             <td>{{ cita.fecha }}</td>
                             <td>{{ cita.hora }}</td>
                             <td>
-                              <span class="badge  
+                              <span class="badge 
                                 {% if cita.estado_cita == 'atendida' %}badge-success
                                 {% elif cita.estado_cita == 'cancelada' %}badge-danger
                                 {% elif cita.estado_cita == 'no_asistio' %}badge-secondary
@@ -69,6 +70,13 @@
                                 <span class="badge badge-warning">Parcial</span>
                               {% else %}
                                 <span class="badge badge-danger">Pendiente</span>
+                              {% endif %}
+                            </td>
+                            <td>
+                              {% if cita.activo %}
+                                <span class="badge badge-success">Activa</span>
+                              {% else %}
+                                <span class="badge badge-danger">Inactiva</span>
                               {% endif %}
                             </td>
 
@@ -92,12 +100,11 @@
                                           <h5 class="modal-title fs-5" id="exampleModalLabel {{ cita.id }}">Confirmación de eliminación</h5>
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body">
-                                          ¿Estas seguro de eliminar la cita de {{ cita.paciente.nombres }} {{ cita.paciente.usuario.apellidos }} del día {{ cita.fecha }}?
+                                        <div class="modal-body"> 
+                                          ¿Estas seguro de eliminar la cita de <strong>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</strong> del día <strong>{{ cita.fecha }}</strong> ?
                                         </div>
                                         <div class="modal-footer">
                                           <a href="{% url 'tabla_citas' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
-                                          <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>-->
                                           <button type="submit" class="btn btn-danger">Eliminar</button>
                                         </div>
                                       </form>   
@@ -160,7 +167,7 @@
                     <select id="eventServicio" class="form-control select2" name="txtServicio" required>
                       <option value="">Seleccionar</option>
                       {% for servicio in servicios %}
-                      <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
+                      <option value="{{ servicio.id }}">{{ servicio }}</option>
                       {% endfor %}
                     </select>
                   </div>

@@ -15,6 +15,7 @@ class Paciente(models.Model):
     tipo_sangre = models.CharField(max_length=3, null=True, blank=True)
     direccion = models.CharField(max_length=255, null=True, blank=True)
     estado_civil = models.CharField(max_length=20, null=True, blank=True)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"

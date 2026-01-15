@@ -24,18 +24,18 @@ def calendar(request):
 
     if user.groups.filter(name='Medico').exists():
         usuario = getattr(user, 'usuario', None)
-        medico = Medico.objects.filter(usuario=usuario).first() if usuario else None
+        medico = Medico.objects.filter(usuario=usuario,activo=True).first() if usuario else None
 
         medicos = Medico.objects.filter(id=medico.id) if medico else Medico.objects.none()
-        pacientes = Paciente.objects.filter(cita__medico=medico).distinct() if medico else Paciente.objects.none()
+        pacientes = Paciente.objects.filter(cita__medico=medico,activo=True).distinct() if medico else Paciente.objects.none()
     else:
-        medicos = Medico.objects.all()
-        pacientes = Paciente.objects.all()
+        medicos = Medico.objects.filter(activo=True)
+        pacientes = Paciente.objects.filter(activo=True)
 
     return render(request, 'citas/calendar.html', {
         'pacientes': pacientes,
         'medicos': medicos,
-        'servicios': Servicio.objects.all(),
+        'servicios': Servicio.objects.filter(activo=True),
     })
 
 
@@ -45,18 +45,20 @@ def tabla_citas(request):
 
     user = request.user
 
-    if user.groups.filter(name='Medico').exists():
+    if user.groups.filter(name='Administrador').exists():
+        citas = Cita.objects.order_by('-fecha')  # TODAS
+    elif user.groups.filter(name='Medico').exists():
         usuario = getattr(user, 'usuario', None)
-        medico = Medico.objects.filter(usuario=usuario).first() if usuario else None
-        citas = Cita.objects.filter(medico=medico) if medico else Cita.objects.none()
+        medico = Medico.objects.filter(usuario=usuario, activo=True).first()
+        citas = Cita.objects.filter(medico=medico, activo=True) if medico else Cita.objects.none()
     else:
-        citas = Cita.objects.all()
+        citas = Cita.objects.filter(activo=True).order_by('-fecha')
 
     return render(request, 'citas/tabla_citas.html', {
         'citas': citas,
-        'pacientes': Paciente.objects.all(),
-        'medicos': Medico.objects.all(),
-        'servicios': Servicio.objects.all(),
+        'pacientes': Paciente.objects.filter(activo=True),
+        'medicos': Medico.objects.filter(activo=True),
+        'servicios': Servicio.objects.filter(activo=True),
     })
 
 
@@ -89,9 +91,9 @@ def registrar_cita(request):
         duracion = request.POST.get('txtDuracion', '').strip()
 
         # VALIDAR FK 
-        paciente = Paciente.objects.get(id=paciente_id)
-        medico = Medico.objects.get(id=medico_id)
-        servicio = Servicio.objects.get(id=servicio_id)
+        paciente = Paciente.objects.get(id=paciente_id,activo=True)
+        medico = Medico.objects.get(id=medico_id,activo=True)
+        servicio = Servicio.objects.get(id=servicio_id,activo=True)
 
         #  VALIDACIÓN DE CHOQUE 
         existe = Cita.objects.filter(medico=medico,fecha=fecha,hora=hora).exists()
@@ -107,6 +109,7 @@ def registrar_cita(request):
             fecha=fecha,
             hora=hora,
             duracion=duracion,
+            activo=True
         )
 
         # PAGO OPCIONAL
@@ -173,6 +176,7 @@ def editar_cita(request, cita_id):
             cita.medico_id = request.POST.get('txtMedico')
             cita.servicio_id = request.POST.get('txtServicio')
             cita.duracion = request.POST.get('txtDuracion')
+            cita.activo = 'activo' in request.POST
 
             cita.fecha = datetime.strptime(request.POST.get('txtFecha'), '%Y-%m-%d').date()
 
@@ -199,9 +203,9 @@ def editar_cita(request, cita_id):
 
     return render(request, 'citas/editar_cita.html', {
         'cita': cita,
-        'pacientes': Paciente.objects.all(),
-        'medicos': Medico.objects.all(),
-        'servicios': Servicio.objects.all(),
+        'pacientes': Paciente.objects.filter(activo=True),
+        'medicos': Medico.objects.filter(activo=True),
+        'servicios': Servicio.objects.filter(activo=True),
         'pagos': cita.pagos.all(),
         'METODOS_PAGO': Pago.METODO_PAGO,
         'ESTADOS_CITA': Cita.ESTADOS_CITA,
@@ -212,8 +216,10 @@ def editar_cita(request, cita_id):
 @user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 
 def eliminar_cita(request, cita_id):
-    cita = get_object_or_404(Cita, id=cita_id)
-    cita.delete()
+    cita = get_object_or_404(Cita, id=cita_id,activo=True)
+    cita.activo = False
+    cita.save()
+    messages.success(request,'Cita eliminada correctamente.')
     return redirect('tabla_citas')
 
 
@@ -222,24 +228,16 @@ def eliminar_cita(request, cita_id):
 def citas_calendario(request):
 
     user = request.user  # usuario logueado
-
-    # ADMIN  y RECEPCIONISTA VEN TODAS LAS CITAS
-    if user.is_superuser or user.groups.filter(
-        name__in=['Administrador', 'Recepcionista']
-    ).exists():
-        citas = Cita.objects.all()
-
-    # 2MÉDICO  SOLO  VE SUS CITAS
+    #adminy recepcionista ven solo citas activas en el calendario
+    if user.groups.filter(name__in=['Administrador', 'Recepcionista']).exists():
+        citas = Cita.objects.filter(activo=True)
+    
+    #medico ve solo sus citas
     elif user.groups.filter(name='Medico').exists():
         usuario = getattr(user, 'usuario', None)
-
-        if usuario:
-            medico = Medico.objects.filter(usuario=usuario).first()
-            citas = Cita.objects.filter(medico=medico) if medico else Cita.objects.none()
-        else:
-            citas = Cita.objects.none()
-
-    # OTROS  NADA
+        medico = Medico.objects.filter(usuario=usuario, activo=True).first()
+        citas = Cita.objects.filter(medico=medico, activo=True) if medico else Cita.objects.none()
+    #otros nada
     else:
         citas = Cita.objects.none()
 

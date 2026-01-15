@@ -93,10 +93,18 @@
                                   <option value="Viud@" {% if paciente.estado_civil == 'Viud@' %}selected{% endif %}>Viud@</option>
                                 </select>
                               </div>
-                              <div class="form-group col-md-6"></div>
-                              <button type="submit" class="btn btn-primary mr-4">Guardar</button>
-                              <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>
+                            
                             </div> 
+                            <div class="modal-footer d-flex justify-content-between">
+                              <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" {% if paciente.activo %} checked {% endif %}>
+                                <label class="custom-control-label" for="RepeatSwitch">Activo</label>
+                              </div>
+                              <div>
+                                <button type="submit" class="btn btn-primary mr-4">Guardar</button>
+                                <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>
+                              </div>
+                            </div>
                           </form>
                         </div>
 

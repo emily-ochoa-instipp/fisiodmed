@@ -80,11 +80,10 @@
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                          ¿Estas seguro de eliminar el médico {{ medico.usuario.user.first_name }} {{ medico.usuario.user.last_name }}?
+                                          ¿Estas seguro de desactivar el médico <strong>{{ medico.usuario.user.first_name }} {{ medico.usuario.user.last_name }}</strong>?
                                         </div>
                                         <div class="modal-footer">
                                           <a href="{% url 'tabla_medicos' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
-                                          <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>-->
                                           <button type="submit" class="btn btn-danger">Eliminar</button>
                                         </div>
                                       </form>   

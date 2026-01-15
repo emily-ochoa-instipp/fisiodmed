@@ -40,6 +40,7 @@
                             <th>Teléfono</th>
                             <th>Correo</th>
                             <th>Dirección</th>
+                            <th>Estado</th>
                             <th>Acción</th>
                           </tr>
                         </thead>
@@ -55,6 +56,13 @@
                             <td>{{ paciente.telefono }}</td>
                             <td>{{ paciente.email }}</td>
                             <td>{{ paciente.direccion }}</td>
+                            <td>
+                              {% if paciente.activo %}
+                                <span class="badge badge-success">Activo</span>
+                              {% else %}
+                                <span class="badge badge-danger">Inactivo</span>
+                              {% endif %}
+                            </td>
 
                             <td>
                               {% if request.user|has_group:"Recepcionista,Administrador,Medico" %}
@@ -76,7 +84,7 @@
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                          ¿Estas seguro de eliminar el paciente {{ paciente.nombres }} {{ paciente.apellidos }}?
+                                          ¿Estas seguro de eliminar el paciente <strong>{{ paciente.nombres }} {{ paciente.apellidos }}</strong>?
                                         </div>
                                         <div class="modal-footer">
                                           <a href="{% url 'tabla_pacientes' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
@@ -181,7 +189,10 @@
                   </div>
                 </div> 
                 <div class="modal-footer d-flex justify-content-right">
-                
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" checked>
+                    <label class="custom-control-label" for="RepeatSwitch">Activo</label>
+                  </div>
                   <div>
                     <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                     <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>

@@ -14,8 +14,8 @@ from django.contrib import messages
 @login_required
 @user_passes_test(roles_permitidos(['Administrador']))
 def tabla_medicos(request):
-    medicos = Medico.objects.all()
-    especialidades = Especialidad.objects.all() 
+    medicos = Medico.objects.order_by('-activo')
+    especialidades = Especialidad.objects.filter(activo=True)
 
     validar_grupos_existentes(request)
     
@@ -57,7 +57,8 @@ def registrar_medico(request):
             messages.error(request, 'Ese correo ya está registrado.')
             return redirect('tabla_medicos')
 
-        especialidad = Especialidad.objects.get(id=especialidad_id)
+        especialidad = get_object_or_404(Especialidad,id=especialidad_id,activo=True)
+
     
         #user
         user = User.objects.create_user(
@@ -94,7 +95,7 @@ def registrar_medico(request):
         Medico.objects.create(
             usuario=usuario,
             especialidad=especialidad,
-            direccion=direccion
+            direccion=direccion,
         )
         messages.success(request, 'Medico registrado correctamente.')
         return redirect('tabla_medicos')
@@ -104,7 +105,7 @@ def registrar_medico(request):
 @user_passes_test(roles_permitidos(['Administrador']))
 def editar_medico(request, medico_id):
     medico = get_object_or_404(Medico, id=medico_id)
-    especialidades = Especialidad.objects.all()
+    especialidades = Especialidad.objects.filter(activo=True)
 
     validar_grupos_existentes(request)
 
@@ -148,7 +149,11 @@ def editar_medico(request, medico_id):
 
         # medico
         medico.direccion = direccion
-        medico.especialidad = Especialidad.objects.get(id=especialidad_id)
+        medico.especialidad = get_object_or_404(
+            Especialidad,
+            id=especialidad_id,
+            activo=True
+        )
         medico.save()
 
         messages.success(request, 'Médico actualizado correctamente.')
@@ -164,12 +169,10 @@ def editar_medico(request, medico_id):
 @user_passes_test(roles_permitidos(['Administrador']))
 def eliminar_medico(request, medico_id):
     medico = get_object_or_404(Medico, id=medico_id)
-    usuario = medico.usuario  
-    user = usuario.user
-    
-    medico.delete()  
-    usuario.delete() 
-    user.delete()  
-    messages.success(request, 'Medico eliminado correctamente.')
+    user = medico.usuario.user
+
+    user.is_active = False
+    user.save() 
+    messages.success(request, 'Medico desactivado correctamente.')
     return redirect('tabla_medicos')
 

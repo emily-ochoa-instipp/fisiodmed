@@ -79,7 +79,7 @@
 
                         <div class="modal-footer d-flex justify-content-between">
                           <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="txtEstado" checked>
+                            <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" {% if cita.activo %} checked {% endif %}>
                             <label class="custom-control-label" for="RepeatSwitch">Activo</label>
                           </div>
                           <div>
@@ -171,7 +171,6 @@
                                               </div>
                                               <div class="modal-footer">
                                                 <a href="{% url 'tabla_citas' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
-                                                <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>-->
                                                 <button type="submit" class="btn btn-danger">Eliminar</button>
                                               </div>
                                             </form>   

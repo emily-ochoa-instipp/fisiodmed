@@ -34,6 +34,7 @@
                           <tr>
                             <th>#</th>
                             <th>Nombre</th>
+                            <th>Estado</th>
                             <th>Acción</th>
                           </tr>
                         </thead>
@@ -42,7 +43,13 @@
                           <tr>
                             <td>{{ especialidad.id }}</td>
                             <td>{{ especialidad.nombre }}</td>
-                    
+                            <td>
+                              {% if especialidad.activo %}
+                                <span class="badge badge-success">Activa</span>
+                              {% else %}
+                                <span class="badge badge-danger">Inactiva</span>
+                              {% endif %}
+                            </td>
 
                             <td>
                               {% if request.user|has_group:"Administrador" %}
@@ -63,7 +70,7 @@
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                          ¿Estas seguro de eliminar la especialidad {{ especialidad.nombre }}?
+                                          ¿Estas seguro de desactivar la especialidad <strong>{{ especialidad.nombre }}</strong>?
                                         </div>
                                         <div class="modal-footer">
                                           <a href="{% url 'tabla_especialidades' %}" class="btn btn-primary"data-bs-dismiss="modal">Cancelar</a>
@@ -113,7 +120,7 @@
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" checked>
+                    <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" checked>
                     <label class="custom-control-label" for="RepeatSwitch">Activo</label>
                   </div>
                   <div>
