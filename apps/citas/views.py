@@ -40,7 +40,7 @@ def calendar(request):
 
 
 @login_required
-@user_passes_test(roles_permitidos(['Secretaria', 'Medico','Administrador', 'Recepcionista']))
+@user_passes_test(roles_permitidos(['Medico','Administrador', 'Recepcionista']))
 def tabla_citas(request):
 
     user = request.user

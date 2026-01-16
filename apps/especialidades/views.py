@@ -8,7 +8,14 @@ from django.contrib import messages
 @login_required
 @user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def tabla_especialidades(request):
-    especialidades = Especialidad.objects.order_by('-activo', 'nombre')
+
+    user = request.user
+
+    if user.groups.filter(name='Administrador').exists():
+        especialidades = Especialidad.objects.order_by('-activo', 'nombre') # TODAS
+    else:
+        especialidades = Especialidad.objects.filter(activo=True)
+
     return render(request, 'especialidades/tabla_especialidades.html', {
         'especialidades': especialidades
     })

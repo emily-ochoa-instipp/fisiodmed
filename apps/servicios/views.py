@@ -10,7 +10,7 @@ from django.db.models.deletion import ProtectedError
 # Create your views here.
 
 @login_required
-@user_passes_test(roles_permitidos(['Administrador, Recepcionista']))
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def tabla_servicios(request):
     servicios = Servicio.objects.order_by('-activo', 'nombre')
     especialidades = Especialidad.objects.filter(activo=True)

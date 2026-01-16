@@ -12,7 +12,7 @@ from django.contrib import messages
 # Create your views here.
 
 @login_required
-@user_passes_test(roles_permitidos(['Administrador']))
+@user_passes_test(roles_permitidos(['Administrador', 'Recepcionista']))
 def tabla_medicos(request):
     medicos = Medico.objects.order_by('-activo')
     especialidades = Especialidad.objects.filter(activo=True)
