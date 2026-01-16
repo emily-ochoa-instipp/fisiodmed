@@ -189,10 +189,12 @@
                   </div>
                 </div> 
                 <div class="modal-footer d-flex justify-content-between">
+                  {% if request.user|has_group:"Administrador" %}
                   <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" checked>
                     <label class="custom-control-label" for="RepeatSwitch">Activo</label>
                   </div>
+                  {% endif %}
                   <div>
                     <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                     <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>
