@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load roles %}
 {% load static %}
 
 {% block contenido %}
@@ -14,7 +14,9 @@
                 </div>
                 <div class="col-auto">
                   <a href="{% url 'tabla_citas' %}" class="btn btn-primary mr-3">Listar citas</a>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Crear cita +</button>
+                  {% if request.user|has_group:"Recepcionista,Administrador" %} 
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Crear cita +</button>
+                  {% endif %}
                 </div>
               </div>
               <div id='calendar'></div>

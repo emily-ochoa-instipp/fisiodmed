@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load roles %}
 {% load static %}
 
 {% block contenido %}
@@ -96,10 +96,12 @@
                             
                             </div> 
                             <div class="modal-footer d-flex justify-content-between">
-                              <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" {% if paciente.activo %} checked {% endif %}>
-                                <label class="custom-control-label" for="RepeatSwitch">Activo</label>
-                              </div>
+                              {% if request.user|has_group:"Recepcionista,Administrador" %}
+                                <div class="custom-control custom-switch">
+                                  <input type="checkbox" class="custom-control-input" id="RepeatSwitch" name="activo" {% if paciente.activo %} checked {% endif %}>
+                                  <label class="custom-control-label" for="RepeatSwitch">Activo</label>
+                                </div>
+                              {% endif %}
                               <div>
                                 <button type="submit" class="btn btn-primary mr-4">Guardar</button>
                                 <a href="{% url 'tabla_pacientes' %}" class="btn btn-danger">Cancelar</a>

@@ -41,8 +41,10 @@
                             <th>Hora</th>
                             <th>Estado</th>
                             <th>Pago</th>
+                            {% if request.user|has_group:"Recepcionista,Administrador" %} 
                             <th>Activo</th>
                             <th>Acción</th>
+                            {% endif %}
                           </tr>
                         </thead>
                         <tbody>
@@ -72,6 +74,7 @@
                                 <span class="badge badge-danger">Pendiente</span>
                               {% endif %}
                             </td>
+                            {% if request.user|has_group:"Recepcionista,Administrador" %} 
                             <td>
                               {% if cita.activo %}
                                 <span class="badge badge-success">Activa</span>
@@ -81,14 +84,14 @@
                             </td>
 
                             <td>
-                              {% if request.user|has_group:"Recepcionista,Administrador" %}                           
+                                                        
                                 <a href="{% url 'editar_cita' cita.id %}" class="btn btn-secondary"><span class="fe fe-edit fe-14 "></span></a>
                               
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#eliminarModal{{ cita.id }}">
                                   <span class="fe fe-trash fe-14 "></span>
                                 </button>
 
-                              {% endif %}
+                            {% endif %}
 
                               <!-- Modal eliminacion -->
                                 <div class="modal fade" id="eliminarModal{{ cita.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ cita.id }}" aria-hidden="true">
