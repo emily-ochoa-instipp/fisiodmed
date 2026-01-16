@@ -27,7 +27,7 @@ def calendar(request):
         medico = Medico.objects.filter(usuario=usuario,usuario__user__is_active=True).first() if usuario else None
 
         medicos = Medico.objects.filter(id=medico.id,usuario__user__is_active=True) if medico else Medico.objects.none()
-        pacientes = Paciente.objects.filter(cita__medico=medico,usuario__user__is_active=True).distinct() if medico else Paciente.objects.none()
+        pacientes = Paciente.objects.filter(cita__medico=medico,activo=True).distinct() if medico else Paciente.objects.none()
     else:
         medicos = Medico.objects.filter(usuario__user__is_active=True)
         pacientes = Paciente.objects.filter(activo=True)
